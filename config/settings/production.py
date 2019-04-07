@@ -16,7 +16,7 @@ SECRET_KEY = env('SECRET_KEY', default='re+.a}t~qS,fR2eG')
 
 # This ensures that Django will be able to detect a secure connection
 # properly on Heroku.
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # SITE CONFIGURATION
 # ------------------------------------------------------------------------------
