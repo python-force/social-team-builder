@@ -1,5 +1,5 @@
 from django.conf import settings
-from storages.backends.s3boto3 import S3Boto3Storage
+from storages.backends.s3boto import S3BotoStorage
 from django.core.files.storage import get_storage_class
 
 import os
@@ -12,17 +12,17 @@ class OverwriteStorage(FileSystemStorage):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
 
-class StaticStorage(S3Boto3Storage):
+class StaticStorage(S3BotoStorage):
     location = settings.STATICFILES_LOCATION
     file_overwrite = True
 
 
-class MediaStorage(S3Boto3Storage):
+class MediaStorage(S3BotoStorage):
     location = settings.MEDIAFILES_LOCATION
     file_overwrite = True
 
 
-class CachedS3BotoStaticStorage(S3Boto3Storage):
+class CachedS3BotoStaticStorage(S3BotoStorage):
 
     # S3 storage backend that saves the files locally, too.
 
