@@ -6,7 +6,7 @@ from .common import * # noga
 
 # SSL PROCESSING
 # ------------------------------------------------------------------------------
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 # SECRET CONFIGURATION
 # ------------------------------------------------------------------------------
