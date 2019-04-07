@@ -1,0 +1,8 @@
+venv
+.idea
+.idea/vcs.xml
+idea
+.env
+stb/media
+staticfiles
+.DS_Store
