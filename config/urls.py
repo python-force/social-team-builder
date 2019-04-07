@@ -21,8 +21,10 @@ from django.contrib.auth import views as auth_views
 
 from django.contrib.auth.decorators import login_required
 
+from stb.core.views import Homepage
+
 urlpatterns = [
-    # path('', Homepage.as_view(), name='index'),
+    path('', Homepage.as_view(), name='index'),
     path('admin/', admin.site.urls),
     # path('accounts/', include('django.contrib.auth.urls')),
     # re_path(r'^robots\.txt$', include('hide_herokuapp.urls')),
