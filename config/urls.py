@@ -17,14 +17,15 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib.auth import views as auth_views
 
 from django.contrib.auth.decorators import login_required
 
-from stb.core.views import Homepage, SignUp
+from stb.core.views import Homepage, SignUp, ProfileView, ProfileEdit
 
 urlpatterns = [
     path('', Homepage.as_view(), name='index'),
+    path('profile/edit/', ProfileEdit.as_view(), name='profile-edit'),
+    path('profile/<int:pk>/', ProfileView.as_view(), name='profile'),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', SignUp.as_view(), name='signup'),
