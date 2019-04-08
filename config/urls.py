@@ -21,12 +21,13 @@ from django.contrib.auth import views as auth_views
 
 from django.contrib.auth.decorators import login_required
 
-from stb.core.views import Homepage
+from stb.core.views import Homepage, SignUp
 
 urlpatterns = [
     path('', Homepage.as_view(), name='index'),
     path('admin/', admin.site.urls),
-    # path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('signup/', SignUp.as_view(), name='signup'),
     # re_path(r'^robots\.txt$', include('hide_herokuapp.urls')),
     # re_path(r'^sitemap.xml', 'nautical.views.sitemapxml'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
