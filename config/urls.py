@@ -25,7 +25,7 @@ from stb.core.views import Homepage, SignUp, ProfileView, ProfileEdit
 urlpatterns = [
     path('', Homepage.as_view(), name='index'),
     path('profile/edit/', ProfileEdit.as_view(), name='profile-edit'),
-    path('profile/<int:pk>/', ProfileView.as_view(), name='profile'),
+    path('profile/', ProfileView.as_view(), name='profile'),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', SignUp.as_view(), name='signup'),

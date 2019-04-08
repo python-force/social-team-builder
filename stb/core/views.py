@@ -8,14 +8,20 @@ from stb.core.forms import UserCreateForm
 class Homepage(TemplateView):
     template_name = "index.html"
 
-class ProfileView(DetailView):
+class ProfileView(TemplateView):
     template_name = "profile.html"
+
     model = Profile
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile'] = Profile.objects.get(user=self.request.user)
+        return context
 
 class ProfileEdit(TemplateView):
     template_name = "profile_edit.html"
 
 class SignUp(CreateView):
     form_class = UserCreateForm
-    success_url = reverse_lazy('profile', args=[2])
+    success_url = reverse_lazy('login')
     template_name = "registration/signup.html"
