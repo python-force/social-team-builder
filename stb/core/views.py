@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from stb.core.models import Profile
 from stb.core.forms import UserCreateForm
+from django.http import Http404
 
 
 class Homepage(TemplateView):
@@ -15,8 +16,12 @@ class ProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profile'] = Profile.objects.get(user=self.request.user)
-        return context
+        try:
+            context['profile'] = Profile.objects.get(user=self.request.user)
+            return context
+        except:
+            raise Http404
+
 
 class ProfileEdit(TemplateView):
     template_name = "profile_edit.html"
