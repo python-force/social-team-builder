@@ -20,12 +20,18 @@ from django.conf.urls.static import static
 
 from django.contrib.auth.decorators import login_required
 
-from stb.core.views import Homepage, SignUp, ProfileView, ProfileEdit
+from stb.core.views import (Homepage, SignUp, ProfileView,
+                            ProfileUpdateView, ProjectView, ProjectNewView,
+                            ProjectUpdateView, Applications)
 
 urlpatterns = [
     path('', Homepage.as_view(), name='index'),
-    path('profile/edit/', ProfileEdit.as_view(), name='profile-edit'),
+    path('profile/edit/', ProfileUpdateView.as_view(), name='profile-edit'),
     path('profile/', ProfileView.as_view(), name='profile'),
+    path('project/', ProjectView.as_view(), name='index'),
+    path('project/new/', ProjectNewView.as_view(), name='index'),
+    path('project/edit/', ProjectUpdateView.as_view(), name='index'),
+    path('applications/', Applications.as_view(), name='index'),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', SignUp.as_view(), name='signup'),
