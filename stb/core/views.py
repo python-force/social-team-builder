@@ -39,11 +39,13 @@ class ProfileView(TemplateView):
 class SkillInline(InlineFormSetFactory):
     model = Skill
     fields = ['title',]
+    factory_kwargs = {'extra': 0, 'max_num': None,
+                      'can_order': False, 'can_delete': False}
 
 class ProfileUpdateView(UpdateWithInlinesView):
     model = Profile
     inlines = [SkillInline,]
-    fields = ['full_name', 'description']
+    fields = ['full_name', 'description', 'avatar']
     template_name = 'profile_edit.html'
 
     def get_queryset(self):
