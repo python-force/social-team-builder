@@ -62,9 +62,7 @@
     <div class="grid-25 grid-push-5">
 
       <div class="circle--secondary--module">
-        <div class="circle--primary--avatar">
-            {{ profile.avatar }}
-        </div>
+          <img style="width: 250px" src="{{ MEDIA_URL }}{{ profile.avatar }}" alt="{{ profile.full.name }} profile picture">
       </div>
 
       <div class="circle--secondary--module">

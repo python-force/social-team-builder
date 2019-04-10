@@ -21,3 +21,13 @@ class Skill(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Project(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, blank=True)
+    url = models.URLField(blank=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.title

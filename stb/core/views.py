@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, CreateView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from stb.core.models import Profile, Skill
+from stb.core.models import Profile, Skill, Project
 from stb.core.forms import UserCreateForm
 from django.http import Http404
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSetFactory
@@ -39,12 +39,19 @@ class ProfileView(TemplateView):
 class SkillInline(InlineFormSetFactory):
     model = Skill
     fields = ['title',]
-    factory_kwargs = {'extra': 0, 'max_num': None,
-                      'can_order': False, 'can_delete': False}
+    initial = [{'title': 'Enter Skill'}]
+    factory_kwargs = {'extra': 1, 'max_num': None,
+                      'can_order': False, 'can_delete': True}
+
+class ProjectInline(InlineFormSetFactory):
+    model = Project
+    fields = ['title', 'url']
+    factory_kwargs = {'extra': 1, 'max_num': None,
+                      'can_order': False, 'can_delete': True}
 
 class ProfileUpdateView(UpdateWithInlinesView):
     model = Profile
-    inlines = [SkillInline,]
+    inlines = [SkillInline, ProjectInline]
     fields = ['full_name', 'description', 'avatar']
     template_name = 'profile_edit.html'
 
