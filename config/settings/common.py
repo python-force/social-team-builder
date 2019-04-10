@@ -45,6 +45,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'compressor',
     'ckeditor',
+    'extra_views',
     # 'nocaptcha_recaptcha',
 ]
 

@@ -26,8 +26,8 @@ from stb.core.views import (Homepage, SignUp, ProfileView,
 
 urlpatterns = [
     path('', Homepage.as_view(), name='index'),
-    path('profile/edit/', ProfileUpdateView.as_view(), name='profile-edit'),
     path('profile/', ProfileView.as_view(), name='profile'),
+    path('profile/edit/', ProfileUpdateView.as_view(), name='profile-edit'),
     path('project/', ProjectView.as_view(), name='index'),
     path('project/new/', ProjectNewView.as_view(), name='index'),
     path('project/edit/', ProjectUpdateView.as_view(), name='index'),

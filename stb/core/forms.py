@@ -1,5 +1,9 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.forms.models import inlineformset_factory
+from stb.core.models import Profile, Skill
+
+# ProfileFormSet = inlineformset_factory(Profile, Skill, fields = ['profile', 'title'], can_delete = True)
 
 class UserCreateForm(UserCreationForm):
     class Meta:

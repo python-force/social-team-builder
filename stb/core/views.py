@@ -1,9 +1,10 @@
 from django.views.generic import TemplateView, CreateView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from stb.core.models import Profile
+from stb.core.models import Profile, Skill
 from stb.core.forms import UserCreateForm
 from django.http import Http404
+from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSetFactory
 
 
 class Homepage(TemplateView):
@@ -35,6 +36,56 @@ class ProfileView(TemplateView):
             raise Http404
 
 
+class SkillInline(InlineFormSetFactory):
+    model = Skill
+    fields = ['title',]
+
+class ProfileUpdateView(UpdateWithInlinesView):
+    model = Profile
+    inlines = [SkillInline,]
+    fields = ['full_name', 'description']
+    template_name = 'profile_edit.html'
+
+    def get_queryset(self):
+        return Profile.objects.get(user=self.request.user)
+
+    def get_object(self, queryset=None):
+        return self.get_queryset()
+
+"""
+class ProfileUpdateView(UpdateView):
+    template_name = "profile_edit.html"
+    model = Profile
+    fields = ['full_name', 'description']
+
+    def get_queryset(self):
+        return Profile.objects.get(user=self.request.user)
+
+    def get_object(self, queryset=None):
+        return self.get_queryset()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['profile_formset'] = ProfileFormSet(self.request.POST, instance=self.object)
+            context['profile_formset'].full_clean()
+        else:
+            context['profile_formset'] = ProfileFormSet(instance=self.object)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data(form=form)
+        formset = context['profile_formset']
+        if formset.is_valid():
+            response = super().form_valid(form)
+            formset.instance = self.object
+            formset.save()
+            return response
+        else:
+            return super().form_invalid(form)
+"""
+
+"""
 class ProfileUpdateView(TemplateView):
     template_name = "profile_edit.html"
 
@@ -47,6 +98,7 @@ class ProfileUpdateView(TemplateView):
             return context
         except:
             raise Http404
+"""
 
 class SignUp(CreateView):
     form_class = UserCreateForm
