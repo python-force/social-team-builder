@@ -15,6 +15,7 @@
 
   <form method="post">
   {% csrf_token %}
+    {{ formset.management_form }}
   <div class="bounds circle--page">
     <div class="circle--page--header circle--fluid">
       <div class="circle--fluid--cell circle--fluid--primary">
@@ -74,6 +75,7 @@
     <div class="grid-25 grid-push-5">
 
       {% for formset in inlines %}
+
           {% if formset.0 %}
           <div class="circle--secondary--module">
           <h4>My Skills</h4>
