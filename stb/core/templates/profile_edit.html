@@ -74,16 +74,16 @@
 
     <div class="grid-25 grid-push-5">
 
-
+    <div class="inline-set">
 
       {% for formset in inlines %}
 
 
-          {% if formest.0 %}
+          {% if formset.0 %}
           <h4>My Skills</h4>
            {{ formset }}
           {% else %}
-       <h4>My Projects</h4>
+          <h4>My Projects</h4>
           {{ formset }}
           {% endif %}
 
@@ -142,7 +142,7 @@
 <!-- Include formset plugin -->
 <script src="{% static 'extra-js/jquery.formset.js' %}"></script>
 <script>
-    $('.skill-set').formset({
+    $('.inline-set').formset({
         addText: 'add link - works',
         deleteText: 'remove - works'
     });

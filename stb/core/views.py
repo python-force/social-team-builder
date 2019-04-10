@@ -25,6 +25,9 @@ class Applications(TemplateView):
 class ProfileView(TemplateView):
     template_name = "profile.html"
 
+class ProfileView(TemplateView):
+    template_name = "profile.html"
+
     model = Profile
 
     def get_context_data(self, **kwargs):
