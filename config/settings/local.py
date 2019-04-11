@@ -17,7 +17,7 @@ SECRET_KEY = env('SECRET_KEY', default='re+.a}t~qS,fR2eG')
 INSTALLED_APPS  = ['debug_toolbar',] + INSTALLED_APPS
 MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware',] + MIDDLEWARE
 
-INTERNAL_IPS = ('127.0.0.1', '68.186.152.97', '71.87.153.54', '66.65.75.74',)
+INTERNAL_IPS = ('127.0.0.1',)
 DEBUG_TOOLBAR_CONFIG = {
      'INTERCEPT_REDIRECTS': False,
      }
