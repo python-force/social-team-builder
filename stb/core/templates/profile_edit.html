@@ -76,12 +76,24 @@
 
     <div class="inline-set">
 
-      {% for formset in inlines %}
+      {{ inlines.0.management_form}}
+      <h4>My Skills</h4>
+      <ul class="circle--clone--list">
+      {% for formset in inlines.0 %}
+        <li class="inline-skills">{{ formset }}</li>
+      {% endfor %}
+      </ul>
 
 
-         {{ formset }}
+      {{ inlines.1.management_form}}
+      <h4>My Projects</h4>
+      <ul class="circle--clone--list">
+      {% for formset in inlines.1 %}
+        <li class="inline-projects">{{ formset }}</li>
+      {% endfor %}
+      </ul>
+    </div>
 
-        {% endfor %}
 
       <!--
 
@@ -136,8 +148,17 @@
 <!-- Include formset plugin -->
 <script src="{% static 'extra-js/jquery.formset.js' %}"></script>
 <script>
-    $('.inline-set').formset({
-
+  $( document ).ready(function() {
+    $('.inline-skills').formset({
+        prefix: '{{ inlines.0.prefix }}',
+        addText: 'add link',
+        deleteText: 'remove'
     });
+    $('.inline-projects').formset({
+        prefix: '{{ inlines.1.prefix }}',
+        addText: 'add link',
+        deleteText: 'remove'
+    });
+  });
 </script>
 {% endblock %}

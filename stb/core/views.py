@@ -45,12 +45,16 @@ class SkillInline(InlineFormSetFactory):
     initial = [{'title': 'Enter Skill'}]
     factory_kwargs = {'extra': 1, 'max_num': None,
                       'can_order': False, 'can_delete': True}
+    prefix = 'skill_formset'
+
 
 class ProjectInline(InlineFormSetFactory):
     model = Project
     fields = ['title', 'url']
     factory_kwargs = {'extra': 1, 'max_num': None,
                       'can_order': False, 'can_delete': True}
+    prefix = 'project_formset'
+
 
 class ProfileUpdateView(UpdateWithInlinesView):
     model = Profile
