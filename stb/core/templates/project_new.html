@@ -4,6 +4,8 @@
 
 {% block content %}
 
+  <form method="post">
+  {% csrf_token %}
   <div class="circle--actions--bar">
     <div class="bounds">
       <div class="grid-100">
@@ -16,22 +18,22 @@
   <div class="bounds circle--page circle--article">
     <div class="grid-70">
       <div class="circle--article--body">
-        <input type="text" class="circle--input--h1" placeholder="Project Title" />
-        <textarea placeholder="Project description..."></textarea>
+        {{ form }}
       </div>
 
       <div class="circle--project--positions">
         <h2>Positions</h2>
 
         <ul class="circle--group--list circle--clone--list">
+          {{ inlines.0.management_form}}
+          {% for formset in inlines.0 %}
           <li>
-            <input type="text" class="circle--input--h3" placeholder="Position Title" />
-            <textarea placeholder="Position description..."></textarea>
-            <a class="circle--clone--add">Add Position</a>
-            <a class="circle--clone--remove">Remove</a>
+            {{ formset }}
           </li>
+          {% endfor %}
         </ul>
-        <a class="button button-primary" href="project.html">Save Project</a>
+        <input type="submit" value="Submit" />
+        <!-- <a class="button button-primary" href="project.html">Save Project</a> -->
 
       </div>
     </div>
@@ -50,5 +52,6 @@
 
     </div>
   </div>
+  </form>
 
 {% endblock %}
