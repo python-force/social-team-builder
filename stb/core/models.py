@@ -35,7 +35,7 @@ class Project(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('project')
+        return reverse('project', args=[str(self.id)])
 
 
 class Position(models.Model):

@@ -86,27 +86,12 @@ class CreateProjectView(CreateWithInlinesView):
     fields = ['title', 'description', 'timeline', 'applicant_requirements']
     template_name = 'project_new.html'
 
-    def post(self, request, *args, **kwargs):
+    def forms_valid(self, form, inlines):
         """
-        Handles POST requests, instantiating a form and formset instances with the passed
-        POST variables and then checked for validity.
+        If the form and formsets are valid, save the associated models.
         """
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-
-        if form.is_valid():
-            self.object = form.save(commit=False)
-            profile = Profile.objects.get(user=self.request.user)
-            self.object.profile = profile
-            form_validated = True
-        else:
-            form_validated = False
-
-        inlines = self.construct_inlines()
-
-        if all_valid(inlines) and form_validated:
-            return self.forms_valid(form, inlines)
-        return self.forms_invalid(form, inlines)
+        self.object.profile = self.request.user.profile
+        return super().forms_valid(form, inlines)
 
     def get_success_url(self):
         return self.object.get_absolute_url()
