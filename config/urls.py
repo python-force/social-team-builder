@@ -31,7 +31,7 @@ urlpatterns = [
     path('project/<int:pk>/', ProjectView.as_view(), name='project'),
     path('project/new/', CreateProjectView.as_view(), name='project-new'),
     path('project/<int:pk>/edit/', ProjectUpdateView.as_view(), name='project-edit'),
-    path('applications/', Applications.as_view(), name='index'),
+    path('applications/', Applications.as_view(), name='applications'),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', SignUp.as_view(), name='signup'),

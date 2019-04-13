@@ -38,7 +38,7 @@
     <div class="bounds">
       <div class="circle--fluid">
         <div class="circle--fluid--cell">
-          <h1 class="hide-text circle--logo"><a class="logo" href="index.html">Circle</a></h1>
+          <h1 class="hide-text circle--logo"><a class="logo" href="{% url 'index' %}">Circle</a></h1>
         </div>
         <div class="circle--fluid--cell circle--fluid--primary">
           <div class="circle--search">
@@ -54,8 +54,8 @@
         <div class="circle--fluid--cell circle--fluid--secondary">
           <nav>
             <ul class="circle--inline">
-              <li><a href="registration/signup.html">Sign Up</a></li>
-              <li><a href="registration/signin.html">Sign In</a></li>
+              <li><a href="{% url 'signup' %}">Sign Up</a></li>
+              <li><a href="{% url 'login' %}">Sign In</a></li>
             </ul>
           </nav>
         </div>
