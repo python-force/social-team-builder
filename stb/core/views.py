@@ -17,6 +17,22 @@ class SignUp(CreateView):
 class Homepage(TemplateView):
     template_name = "index.html"
 
+    model = Project
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['profile'] = Profile.objects.get(user=self.request.user)
+        projects = Project.objects.all()
+        context['projects'] = projects
+        positions = []
+        for project in projects:
+            for position in project.positions.all():
+                if position.title not in positions:
+                    positions.append(position.title)
+        print(positions)
+        context['positions'] = positions
+        return context
+
 class ProjectView(TemplateView):
     template_name = "project.html"
 

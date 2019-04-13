@@ -24,14 +24,9 @@
         <h4>Project Needs</h4>
         <ul class="circle--filter--list">
           <li><a class="selected">All Needs</a></li>
-          <li><a>Android Developer</a></li>
-          <li><a>Designer</a></li>
-          <li><a>Java Developer</a></li>
-          <li><a>PHP Developer</a></li>
-          <li><a>Python Developer</a></li>
-          <li><a>Rails Developer</a></li>
-          <li><a>WordPress Developer</a></li>
-          <li><a>iOS Developer</a></li>
+          {% for position in positions %}
+          <li><a>{{ position.title }}</a></li>
+          {% endfor %}
         </ul>
       </div>
     </div>
@@ -45,22 +40,20 @@
           </tr>
         </thead>
         <tbody>
+          {% for project in projects %}
           <tr class="clickable-row" data-href="project.html">
             <td>
-              <h3>Invoice Delivery Tool</h3>
+              <h3>{{ project.title }}</h3>
             </td>
             <td class="circle--cell--right">
-              <span class="secondary-label">Rails Developer</span>
+              <span class="secondary-label">
+                {% for position in project.positions.all %}
+                  {{ position }}{% if forloop.last %}{% else %}, {% endif %}
+                {% endfor %}
+              </span>
             </td>
           </tr>
-          <tr class="clickable-row" data-href="project.html">
-            <td>
-              <h3>Twitter Client</h3>
-            </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Designer</span>
-            </td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
