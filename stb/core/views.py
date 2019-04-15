@@ -1,6 +1,7 @@
 from django.views.generic import TemplateView, CreateView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
+from django.contrib.auth.models import User
 from stb.core.models import Profile, Skill, Project, Position, Position_Application
 from stb.core.forms import UserCreateForm
 from django.http import Http404
@@ -34,6 +35,79 @@ class Homepage(TemplateView):
 
 class Applications(TemplateView):
     template_name = "applications.html"
+
+    model = Position_Application
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # profile = Profile.objects.get(user=self.request.user)
+        applicants = Position_Application.objects.all().prefetch_related('user', 'position')
+        applicant_dict = {}
+        projects = []
+        positions = []
+        if not self.kwargs:
+            for applicant in applicants:
+                project_list = []
+                project_list.append(applicant.user)
+                project_list.append(applicant.position.project)
+                project_list.append(applicant.position)
+                projects.append(applicant.position.project)
+                positions.append(applicant.position)
+                applicant_dict[applicant.id] = project_list
+        else:
+            if 'project' in self.kwargs:
+                obj = Project.objects.get(id=self.kwargs.get('project'))
+                for applicant in applicants:
+                    project_list = []
+                    if applicant.position.project.id == obj.id:
+                        project_list.append(applicant.user)
+                        project_list.append(applicant.position.project)
+                        project_list.append(applicant.position)
+                        applicant_dict[applicant.id] = project_list
+                    projects.append(applicant.position.project)
+                    positions.append(applicant.position)
+            elif 'position' in self.kwargs:
+                obj = Position.objects.get(id=self.kwargs.get('position'))
+
+                for applicant in applicants:
+                    project_list = []
+                    if applicant.position.title == obj.title:
+                        project_list.append(applicant.user)
+                        project_list.append(applicant.position.project)
+                        project_list.append(applicant.position)
+                        applicant_dict[applicant.id] = project_list
+                    projects.append(applicant.position.project)
+                    positions.append(applicant.position)
+        context['applicant_dict'] = applicant_dict
+        context['projects'] = projects
+        context['positions'] = positions
+        return context
+
+
+"""
+class ApplicationsProjectView(TemplateView):
+    template_name = "applications.html"
+
+    model = Position_Application
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        applicants = Position_Application.objects.all().prefetch_related('user', 'position')
+        applicant_dict = {}
+        projects = []
+        for applicant in applicants:
+            project_list = []
+            project_list.append(applicant.user)
+            project_list.append(applicant.position.project)
+            project_list.append(applicant.position)
+            projects.append(applicant.position.project)
+            applicant_dict[applicant.id] = project_list
+        context['applicant_dict'] = applicant_dict
+        context['projects'] = projects
+        position = Position.objects.get(id=self.kwargs.get('pk'))
+        context["projects"] = Project.objects.all().filter(positions__title=position.title)
+        return context
+"""
 
 
 class ProfileSkillInline(InlineFormSetFactory):

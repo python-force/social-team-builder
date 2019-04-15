@@ -36,6 +36,8 @@ urlpatterns = [
     path('project/<int:pk>/apply/<int:position>/', ApplyPositionView.as_view(), name='apply-position'),
     path('project/<int:pk>/cancel-apply/<int:position>/', CancelApplyView.as_view(), name='cancel-apply'),
     path('applications/', Applications.as_view(), name='applications'),
+    path('applications/project/<int:project>/', Applications.as_view(), name='applications-project'),
+    path('applications/position/<int:position>/', Applications.as_view(), name='applications-position'),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', SignUp.as_view(), name='signup'),
