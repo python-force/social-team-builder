@@ -23,10 +23,8 @@
       <div class="circle--filter circle--secondary--module">
         <h4>Project Needs</h4>
         <ul class="circle--filter--list">
-          <li><a class="selected">All Needs</a></li>
-          {% for position in positions %}
-          <li><a href="{% url 'project-needs' position.id %}">{{ position }}</a></li>
-          {% endfor %}
+            <li><a class="selected">All Needs</a></li>
+            <li><a>{{ position }}</a></li>
         </ul>
       </div>
     </div>
@@ -48,7 +46,7 @@
             <td class="circle--cell--right">
               <span class="secondary-label">
                 {% for position in project.positions.all %}
-                  {{ position }}{% if forloop.last %}{% else %}, {% endif %}
+                  {{ position }}
                 {% endfor %}
               </span>
             </td>

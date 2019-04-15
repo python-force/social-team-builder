@@ -16,3 +16,13 @@ class MyUserAdmin(BaseUserAdmin):
 admin.site.unregister(MyCustomUser)
 admin.site.register(MyCustomUser, MyUserAdmin)
 """
+
+
+from stb.core.models import Skill
+
+
+class SkillAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Skill, SkillAdmin)

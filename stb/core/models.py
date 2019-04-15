@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils import timezone
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -16,7 +17,7 @@ class Profile(models.Model):
 
 
 class Skill(models.Model):
-    profile = models.ForeignKey(Profile, related_name='skills', on_delete=models.CASCADE)
+    profile = models.ManyToManyField(Profile, related_name='skills', blank=True)
     title = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
@@ -45,3 +46,18 @@ class Position(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Position_Application(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    position = models.ForeignKey(Position, on_delete=models.CASCADE)
+    status = models.IntegerField()
+    created = models.DateTimeField(editable=False)
+    modified = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        """On save, update timestamps"""
+        if not self.id:
+            self.created = timezone.now()
+        self.modified = timezone.now()
+        return super().save(*args, **kwargs)

@@ -62,7 +62,19 @@
       </div>
     </div>
   </header>
-
+  {% if messages %}
+  <div class="circle--actions--bar">
+    <div class="bounds">
+      <div class="grid-100">
+          <ul class="messages">
+              {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+          </ul>
+      </div>
+    </div>
+  </div>
+  {% endif %}
   {% block content %}{% endblock %}
 
 </body>

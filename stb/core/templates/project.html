@@ -33,7 +33,12 @@
           <li>
             <h3>{{ position.title }}</h3>
             <p>{{ position.description }}</p>
-            <a class="button button-primary">Apply</a>
+            {% if position.id not in applied %}
+            <a class="button button-primary" href="{% url 'apply-position' project.id position.id %}">Apply</a>
+            {% else %}
+            <a class="button button-primary button-inactive">Applied</a>
+            <a class="button button-primary" href="{% url 'cancel-apply' project.id position.id %}">Cancel Apply?</a>
+            {% endif %}
           </li>
           {% endfor %}
         </ul>
@@ -46,7 +51,7 @@
         <h3>Project Needs</h3>
         <ul class="circle--link--list">
           {% for position in positions %}
-          <li><a>{{ position.title }}</a></li>
+          <li><a href="{% url 'project-needs' position.id %}">{{ position.title }}</a></li>
           {% endfor %}
         </ul>
       </div>
