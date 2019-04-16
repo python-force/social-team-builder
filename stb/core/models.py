@@ -13,7 +13,7 @@ class Profile(models.Model):
         return self.user.username
 
     def get_absolute_url(self):
-        return reverse('profile')
+        return reverse('profile', args=[str(self.id)])
 
 
 class Skill(models.Model):

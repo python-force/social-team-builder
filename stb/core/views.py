@@ -10,6 +10,7 @@ from django.views.generic import RedirectView
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from django.contrib import messages
+import collections
 from django.http import HttpResponseRedirect
 from django.forms.formsets import all_valid
 
@@ -19,6 +20,9 @@ class SignUp(CreateView):
     template_name = "registration/signup.html"
 
 
+class Test(TemplateView):
+    template_name = "3.html"
+
 class Homepage(TemplateView):
     template_name = "index.html"
 
@@ -26,10 +30,11 @@ class Homepage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        profile = Profile.objects.get(user=self.request.user)
+        # profile = Profile.objects.get(user=self.request.user)
         projects = Project.objects.all()
         context['projects'] = projects
-        context['positions'] = Position.objects.filter(project__profile=profile.id).order_by('title').distinct('title')
+        #context['positions'] = Position.objects.all().order_by('title')
+        context['positions'] = Position.objects.order_by('title').distinct('title')
         return context
 
 
@@ -68,7 +73,6 @@ class Applications(TemplateView):
                     positions.append(applicant.position)
             elif 'position' in self.kwargs:
                 obj = Position.objects.get(id=self.kwargs.get('position'))
-
                 for applicant in applicants:
                     project_list = []
                     if applicant.position.title == obj.title:
@@ -80,7 +84,16 @@ class Applications(TemplateView):
                     positions.append(applicant.position)
         context['applicant_dict'] = applicant_dict
         context['projects'] = projects
-        context['positions'] = positions
+
+        # Removes duplicates objects based on title
+        # Cannot use .distinct() - it is not a QS
+        seen = collections.OrderedDict()
+        for obj in positions:
+            # eliminate this check if you want the last item
+            if obj.title not in seen:
+                seen[obj.title] = obj
+
+        context['positions'] = list(seen.values())
         return context
 
 
@@ -138,14 +151,11 @@ class ProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        try:
-            profile = Profile.objects.get(user=self.request.user)
-            context['profile'] = profile
-            context['skills'] = profile.skills.all()
-            context['projects'] = profile.projects.all()
-            return context
-        except:
-            raise Http404
+        profile = get_object_or_404(Profile, user=self.request.user, id=self.kwargs.get('pk'))
+        context['profile'] = profile
+        context['skills'] = profile.skills.all()
+        context['projects'] = profile.projects.all()
+        return context
 
 
 class ProfileUpdateView(UpdateWithInlinesView):
@@ -155,7 +165,7 @@ class ProfileUpdateView(UpdateWithInlinesView):
     template_name = 'profile_edit.html'
 
     def get_queryset(self):
-        return Profile.objects.get(user=self.request.user)
+        return get_object_or_404(Profile, user=self.request.user, id=self.kwargs.get('pk'))
 
     def get_object(self, queryset=None):
         return self.get_queryset()
