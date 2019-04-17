@@ -45,8 +45,8 @@ class Applications(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # profile = Profile.objects.get(user=self.request.user)
-        applicants = Position_Application.objects.all().prefetch_related('user', 'position')
+        profile = Profile.objects.get(user=self.request.user)
+        applicants = Position_Application.objects.all().exclude(user_id=self.request.user.id).prefetch_related('user', 'position')
         applicant_dict = {}
         projects = []
         positions = []
@@ -83,17 +83,22 @@ class Applications(TemplateView):
                     projects.append(applicant.position.project)
                     positions.append(applicant.position)
         context['applicant_dict'] = applicant_dict
-        context['projects'] = projects
+
 
         # Removes duplicates objects based on title
         # Cannot use .distinct() - it is not a QS
+        print(projects)
+        duplicates_dict = {'positions': positions, 'projects': projects}
         seen = collections.OrderedDict()
-        for obj in positions:
-            # eliminate this check if you want the last item
-            if obj.title not in seen:
-                seen[obj.title] = obj
+        for key, value in duplicates_dict.items():
+            for obj in value:
+                # eliminate this check if you want the last item
+                if obj.title not in seen:
+                    seen[obj.title] = obj
+            context[key] = list(seen.values())
+            seen = collections.OrderedDict()
 
-        context['positions'] = list(seen.values())
+        context['profile'] = profile
         return context
 
 
@@ -252,24 +257,33 @@ class ApplyPositionView(RedirectView):
     def get(self, request, *args, **kwargs):
         position = get_object_or_404(Position, id=self.kwargs.get("position"))
 
-        try:
-            obj, created = Position_Application.objects.get_or_create(
-                user=self.request.user,
-                position=position,
-                status=0
-            )
-        except IntegrityError:
+        if position.project.profile.user != self.request.user:
+            try:
+                obj, created = Position_Application.objects.get_or_create(
+                    user=self.request.user,
+                    position=position,
+                    status=0
+                )
+            except IntegrityError:
+                messages.warning(
+                    self.request,
+                    ("You have already applied for {} "
+                     "position").format(
+                        position.title
+                    )
+                )
+            else:
+                messages.success(
+                    self.request,
+                    "You have now applied for {}.".format(position.title)
+                )
+        else:
             messages.warning(
                 self.request,
-                ("You have already applied for {} "
+                ("You cannot apply for your own {} "
                  "position").format(
                     position.title
                 )
-            )
-        else:
-            messages.success(
-                self.request,
-                "You have now applied for {}.".format(position.title)
             )
         return super().get(request, *args, **kwargs)
 

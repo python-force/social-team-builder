@@ -8,7 +8,7 @@
     <nav class="bounds">
       <ul class="circle--pill--list">
         <li><a class="selected" href="applications.html">Applications</a></li>
-        <li><a href="profile.html">Profile</a></li>
+        <li><a href="{% url 'profile' profile.id %}">Profile</a></li>
       </ul>
     </nav>
   </div>
@@ -61,7 +61,7 @@
         </thead>
         <tbody>
           {% for key, value in applicant_dict.items %}
-          <tr class="clickable-row" data-href="{% url 'profile' %}">
+          <tr class="clickable-row" data-href="{% url 'profile' value.0.users.id %}">
             <td>
               <h3>{{ value.0 }}</h3>
               <p>{{ value.1.title }}</p>

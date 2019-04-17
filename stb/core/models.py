@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='users', on_delete=models.CASCADE)
     full_name = models.CharField(max_length=50, blank=True)
     description = models.TextField(blank=True)
     avatar = models.ImageField(blank=True)

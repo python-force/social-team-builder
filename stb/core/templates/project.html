@@ -34,11 +34,7 @@
             <h3>{{ position.title }}</h3>
             <p>{{ position.description }}</p>
             {% if position.id not in applied %}
-              {% if app_profile != user_profile %}
-              <a class="button button-primary" href="{% url 'apply-position' project.id position.id %}">Apply</a>
-              {% else %}
-              <h3>You cannot apply for your own project.</h3>
-              {% endif %}
+            <a class="button button-primary" href="{% url 'apply-position' project.id position.id %}">Apply</a>
             {% else %}
             <a class="button button-primary button-inactive">Applied</a>
             <a class="button button-primary" href="{% url 'cancel-apply' project.id position.id %}">Cancel Apply?</a>
