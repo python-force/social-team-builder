@@ -229,8 +229,9 @@ class ProjectView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profile'] = Profile.objects.get(user=self.request.user)
         context['project'] = Project.objects.get(id=self.kwargs.get('pk'))
+        context['app_profile'] = Profile.objects.get(id=context['project'].profile.id)
+        context['user_profile'] = Profile.objects.get(user=self.request.user)
         positions = context['project'].positions.all()
         context['positions'] = positions
         applied = []

@@ -18,7 +18,7 @@
       <div class="circle--article--header">
         <h4 class="circle--article--section">Project</h4>
         <h1 class="circle--article--title">{{ project.title }}</h1>
-        <p class="circle--article--byline">Project Owner: <a>{{ profile.full_name }}</a></p>
+        <p class="circle--article--byline">Project Owner: <a>{{ app_profile.full_name }}</a></p>
       </div>
 
       <div class="circle--article--body">
@@ -34,7 +34,11 @@
             <h3>{{ position.title }}</h3>
             <p>{{ position.description }}</p>
             {% if position.id not in applied %}
-            <a class="button button-primary" href="{% url 'apply-position' project.id position.id %}">Apply</a>
+              {% if app_profile != user_profile %}
+              <a class="button button-primary" href="{% url 'apply-position' project.id position.id %}">Apply</a>
+              {% else %}
+              <h3>You cannot apply for your own project.</h3>
+              {% endif %}
             {% else %}
             <a class="button button-primary button-inactive">Applied</a>
             <a class="button button-primary" href="{% url 'cancel-apply' project.id position.id %}">Cancel Apply?</a>
