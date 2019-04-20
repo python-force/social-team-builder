@@ -7,7 +7,7 @@ from stb.core.forms import UserCreateForm
 from django.http import Http404
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSetFactory
 from django.views.generic import RedirectView
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 from django.db import IntegrityError
 from django.contrib import messages
 import collections
@@ -46,7 +46,7 @@ class Applications(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         profile = Profile.objects.get(user=self.request.user)
-        applicants = Position_Application.objects.all().exclude(user_id=self.request.user.id).prefetch_related('user', 'position')
+        applicants = Position_Application.objects.all().filter(profile=profile).prefetch_related('user', 'position')
         applicant_dict = {}
         projects = []
         positions = []
@@ -56,6 +56,7 @@ class Applications(TemplateView):
                 project_list.append(applicant.user)
                 project_list.append(applicant.position.project)
                 project_list.append(applicant.position)
+                project_list.append(applicant.status)
                 projects.append(applicant.position.project)
                 positions.append(applicant.position)
                 applicant_dict[applicant.id] = project_list
@@ -68,6 +69,7 @@ class Applications(TemplateView):
                         project_list.append(applicant.user)
                         project_list.append(applicant.position.project)
                         project_list.append(applicant.position)
+                        project_list.append(applicant.status)
                         applicant_dict[applicant.id] = project_list
                     projects.append(applicant.position.project)
                     positions.append(applicant.position)
@@ -79,15 +81,16 @@ class Applications(TemplateView):
                         project_list.append(applicant.user)
                         project_list.append(applicant.position.project)
                         project_list.append(applicant.position)
+                        project_list.append(applicant.status)
                         applicant_dict[applicant.id] = project_list
                     projects.append(applicant.position.project)
                     positions.append(applicant.position)
+        applicant_dict = collections.OrderedDict(sorted(applicant_dict.items()))
         context['applicant_dict'] = applicant_dict
 
 
         # Removes duplicates objects based on title
         # Cannot use .distinct() - it is not a QS
-        print(projects)
         duplicates_dict = {'positions': positions, 'projects': projects}
         seen = collections.OrderedDict()
         for key, value in duplicates_dict.items():
@@ -156,10 +159,9 @@ class ProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        profile = get_object_or_404(Profile, user=self.request.user, id=self.kwargs.get('pk'))
-        context['profile'] = profile
-        context['skills'] = profile.skills.all()
-        context['projects'] = profile.projects.all()
+        context['profile'] = get_object_or_404(Profile, id=self.kwargs.get('pk'))
+        context['skills'] = context['profile'].skills.all()
+        context['projects'] = context['profile'].projects.all()
         return context
 
 
@@ -194,7 +196,7 @@ class CreateProjectView(CreateWithInlinesView):
         """
         If the form and formsets are valid, save the associated models.
         """
-        self.object.profile = self.request.user.profile
+        self.object.profile = self.request.user.users
         return super().forms_valid(form, inlines)
 
     def get_success_url(self):
@@ -207,11 +209,37 @@ class ProjectUpdateView(UpdateWithInlinesView):
     fields = ['title', 'description', 'timeline', 'applicant_requirements']
     template_name = 'project_edit.html'
 
-    def get_queryset(self):
-        return Project.objects.get(id=self.kwargs.get('pk'))
-
     def get_object(self, queryset=None):
-        return self.get_queryset()
+        project = get_object_or_404(Project, id=self.kwargs.get('pk'), profile=self.request.user.users.id)
+        return project
+
+class ProjectDeleteView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse("index")
+
+    def get(self, request, *args, **kwargs):
+        project = get_object_or_404(Project, id=self.kwargs.get("pk"))
+
+        if project.profile.user == self.request.user:
+            try:
+                project.delete()
+            except IntegrityError:
+                messages.warning(
+                    self.request,
+                    ("Project {} "
+                     "does not exist").format(
+                        project.title
+                    )
+                )
+            else:
+                messages.warning(
+                    self.request,
+                    ("Project {} "
+                     "succesfully deleted").format(
+                        project.title
+                    )
+                )
+        return super().get(request, *args, **kwargs)
 
 
 class ProjectNeedsView(TemplateView):
@@ -238,15 +266,41 @@ class ProjectView(TemplateView):
         context['app_profile'] = Profile.objects.get(id=context['project'].profile.id)
         context['user_profile'] = Profile.objects.get(user=self.request.user)
         positions = context['project'].positions.all()
-        context['positions'] = positions
-        applied = []
+        applied = {}
         for position in positions:
+            position_info=[position]
+            applied_applicants = Position_Application.objects.filter(position=position)
             try:
-                found = Position_Application.objects.get(user=self.request.user, position=position)
-                applied.append(found.position.id)
+                found = applied_applicants.get(user=self.request.user)
             except:
-                pass
-        context['applied'] = applied
+                try:
+                    filled = applied_applicants.get(status=1)
+                except:
+                    position_info.append(-1)
+                    applied[position.id] = position_info
+                else:
+                    if filled:
+                        position_info.append(1)
+                        applied[position.id] = position_info
+            else:
+                if found:
+                    position_info.append(found.status)
+                    applied[position.id] = position_info
+
+
+            """
+            try:
+                found = Position_Application.objects.get(position=position)
+                if found.user == self.request.user:
+                    position_info.append(found.status)
+                    applied[position.id] = position_info
+            except:
+                position_info.append(-1)
+                applied[position.id] = position_info
+            """
+
+        context['positions'] = applied
+        print(context['positions'])
         return context
 
 class ApplyPositionView(RedirectView):
@@ -256,12 +310,14 @@ class ApplyPositionView(RedirectView):
 
     def get(self, request, *args, **kwargs):
         position = get_object_or_404(Position, id=self.kwargs.get("position"))
+        position_profile = get_object_or_404(Profile, id=position.project.profile_id)
 
         if position.project.profile.user != self.request.user:
             try:
                 obj, created = Position_Application.objects.get_or_create(
                     user=self.request.user,
                     position=position,
+                    profile=position_profile,
                     status=0
                 )
             except IntegrityError:
@@ -300,6 +356,7 @@ class CancelApplyView(RedirectView):
             position = Position_Application.objects.get(
                 user=self.request.user,
                 position=position,
+                profile=position.project.profile_id,
                 status=0
             )
         except Position_Application.DoesNotExist:
@@ -317,3 +374,46 @@ class CancelApplyView(RedirectView):
                 "You have canceled the application."
             )
         return super().get(request, *args, **kwargs)
+
+
+class AcceptProjectProfileView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse("applications")
+
+    def get(self, request, *args, **kwargs):
+
+        my_profile = get_object_or_404(Profile, id=self.request.user.users.id)
+        profile = get_object_or_404(Profile, id=self.kwargs.get('pk'))
+        position = get_object_or_404(Position, id=self.kwargs.get('position'))
+
+        if profile != my_profile:
+            applicant = get_object_or_404(Position_Application, position_id=self.kwargs.get('position'), user_id=profile.user.id)
+            applicants = Position_Application.objects.filter(position_id=position.id)
+            hired = applicants.filter(status=1)
+
+            if hired:
+                messages.warning(
+                    self.request,
+                    ("The {} "
+                     "position was already filled").format(
+                        position.title
+                    )
+                )
+            else:
+                reject_list = []
+                for reject in applicants:
+                    reject.status = 2
+                    reject_list.append(reject)
+                Position_Application.objects.bulk_update(reject_list, ['status'])
+                applicant.status = 1
+                applicant.save()
+                messages.success(
+                    self.request,
+                    "Applicant {} was accepted for the {} position".format(profile.full_name, position.title)
+                )
+
+            return super().get(request, *args, **kwargs)
+        else:
+            messages.warning(
+                self.request,
+                ("Please do not try to apply to your own projects."))

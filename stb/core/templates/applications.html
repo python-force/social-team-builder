@@ -57,17 +57,31 @@
           <tr>
             <th>Applicant</th>
             <th class="circle--cell--right">Applicant Position</th>
+            <th class="circle--cell--right">Hire Applicant</th>
           </tr>
         </thead>
         <tbody>
           {% for key, value in applicant_dict.items %}
-          <tr class="clickable-row" data-href="{% url 'profile' value.0.users.id %}">
-            <td>
-              <h3>{{ value.0 }}</h3>
+          <tr>
+            <td class="clickable-row" data-href="{% url 'profile' value.0.users.id %}">
+              <h3>{{ value.0 }} - {{ value.0.users.id }}</h3>
               <p>{{ value.1.title }}</p>
             </td>
+            <td class="circle--cell--right clickable-row" data-href="{% url 'profile' value.0.users.id %}">
+              <span class="secondary-label">{{ value.2.title }} - {{ value.2.id }}</span>
+            </td>
             <td class="circle--cell--right">
-              <span class="secondary-label">{{ value.2.title }}</span>
+              <span class="secondary-label">
+                {% if value.3 == 0 %}
+                {{ value.3 }}
+                <a class="button button-primary" href="{% url 'applicant-accepted' value.0.users.id value.2.id %}">Hire Developer</a>
+                {% elif value.3 == 1 %}
+                {{ value.3 }}
+                <a class="button button-primary button-inactive">Developer Hired</a>
+                {% else %}
+                <a class="button button-primary button-inactive">Developer Rejected</a>
+                {% endif %}
+              </span>
             </td>
           </tr>
           {% endfor %}

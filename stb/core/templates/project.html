@@ -8,7 +8,7 @@
     <div class="bounds">
       <div class="grid-100">
         <a class="button" href="{% url 'project-edit' project.id %}">Edit Project</a>
-        <a class="button button-text" href="index.html">Delete Project</a>
+        <a class="button button-text" href="{% url 'project-delete' project.id %}">Delete Project</a>
       </div>
     </div>
   </div>
@@ -27,17 +27,18 @@
 
       <div class="circle--project--positions">
         <h2>Positions</h2>
-
         <ul class="circle--group--list">
-          {% for position in positions %}
+          {% for position_id, position_info_list in positions.items %}
           <li>
-            <h3>{{ position.title }}</h3>
-            <p>{{ position.description }}</p>
-            {% if position.id not in applied %}
-            <a class="button button-primary" href="{% url 'apply-position' project.id position.id %}">Apply</a>
-            {% else %}
+            <h3>{{ position_info_list.0.title }}</h3>
+            <p>{{ position_info_list.0.description }}</p>
+            {% if position_info_list.1 == -1 %}
+            <a class="button button-primary" href="{% url 'apply-position' project.id position_id %}">Apply</a>
+            {% elif position_info_list.1 == 0 %}
             <a class="button button-primary button-inactive">Applied</a>
-            <a class="button button-primary" href="{% url 'cancel-apply' project.id position.id %}">Cancel Apply?</a>
+            <a class="button button-primary" href="{% url 'cancel-apply' project.id position_id %}">Cancel Apply?</a>
+            {% elif position_info_list.1 == 1 %}
+            <a class="button button-primary button-inactive">Position Filled</a>
             {% endif %}
           </li>
           {% endfor %}
@@ -50,8 +51,8 @@
       <div class="circle--secondary--module">
         <h3>Project Needs</h3>
         <ul class="circle--link--list">
-          {% for position in positions %}
-          <li><a href="{% url 'project-needs' position.id %}">{{ position.title }}</a></li>
+          {% for position_id, position_info_list in positions.items %}
+          <li><a href="{% url 'project-needs' position_id %}">{{ position.title }}</a></li>
           {% endfor %}
         </ul>
       </div>

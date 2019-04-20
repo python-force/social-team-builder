@@ -36,7 +36,8 @@
         <thead>
           <tr>
             <th>Project Title</th>
-            <th class="circle--cell--right">Project Needs</th>
+            <th>Project Needs</th>
+            <th>Open / Filled</th>
           </tr>
         </thead>
         <tbody>
@@ -51,6 +52,9 @@
                   {{ position }}{% if forloop.last %}{% else %}, {% endif %}
                 {% endfor %}
               </span>
+            </td>
+            <td>
+              <h3>OPEN</h3>
             </td>
           </tr>
           {% endfor %}

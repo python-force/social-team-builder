@@ -54,8 +54,12 @@
         <div class="circle--fluid--cell circle--fluid--secondary">
           <nav>
             <ul class="circle--inline">
+              {% if user.is_authenticated %}
+              <p style="color:white;">Welcome, {{ user.username }}</p>
+              {% else %}
               <li><a href="{% url 'signup' %}">Sign Up</a></li>
               <li><a href="{% url 'login' %}">Sign In</a></li>
+              {% endif %}
             </ul>
           </nav>
         </div>

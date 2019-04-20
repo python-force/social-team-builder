@@ -50,6 +50,7 @@ class Position(models.Model):
 
 class Position_Application(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     position = models.ForeignKey(Position, on_delete=models.CASCADE)
     status = models.IntegerField()
     created = models.DateTimeField(editable=False)

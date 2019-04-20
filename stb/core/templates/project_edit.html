@@ -9,8 +9,8 @@
   <div class="circle--actions--bar">
     <div class="bounds">
       <div class="grid-100">
-        <a class="button button-primary" href="project.html">Save Changes</a>
-        <a class="button button-text" href="index.html">Delete Project</a>
+        <input type="submit" value="Submit" />
+        <a class="button button-text" href="{% url 'project-delete' project.id %}">Delete Project</a>
       </div>
     </div>
   </div>
@@ -42,7 +42,6 @@
           </li>
           {% endfor %}
         </ul>
-        <input type="submit" value="Submit" />
         <!-- <a class="button button-primary" href="project.html">Save Changes</a> -->
       </div>
     </div>

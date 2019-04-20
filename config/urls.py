@@ -23,17 +23,20 @@ from django.contrib.auth.decorators import login_required
 from stb.core.views import (Homepage, SignUp, ProfileView,
                             ProfileUpdateView, ProjectView, CreateProjectView,
                             ProjectUpdateView, Applications, ProjectNeedsView,
-                            ApplyPositionView, CancelApplyView, Test)
+                            ApplyPositionView, CancelApplyView, AcceptProjectProfileView,
+                            ProjectDeleteView, Test)
 
 urlpatterns = [
     path('', Homepage.as_view(), name='index'),
     path('test/', Test.as_view(), name='test'),
     path('profile/<int:pk>/edit/', ProfileUpdateView.as_view(), name='profile-edit'),
+    path('profile/<int:pk>/accept/<int:position>/', AcceptProjectProfileView.as_view(), name='applicant-accepted'),
     path('profile/<int:pk>/', ProfileView.as_view(), name='profile'),
     path('project-needs/<int:pk>/', ProjectNeedsView.as_view(), name='project-needs'),
     path('project/<int:pk>/', ProjectView.as_view(), name='project'),
     path('project/new/', CreateProjectView.as_view(), name='project-new'),
     path('project/<int:pk>/edit/', ProjectUpdateView.as_view(), name='project-edit'),
+    path('project/<int:pk>/delete/', ProjectDeleteView.as_view(), name='project-delete'),
     path('project/<int:pk>/apply/<int:position>/', ApplyPositionView.as_view(), name='apply-position'),
     path('project/<int:pk>/cancel-apply/<int:position>/', CancelApplyView.as_view(), name='cancel-apply'),
     path('applications/', Applications.as_view(), name='applications'),
