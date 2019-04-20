@@ -46,6 +46,8 @@ THIRD_PARTY_APPS = [
     'compressor',
     'ckeditor',
     'extra_views',
+    'markdownx',
+    'markdown_deux',
     # 'nocaptcha_recaptcha',
 ]
 
@@ -277,3 +279,12 @@ NORECAPTCHA_SECRET_KEY  = env('RECAPTCHA_PRIVATE_KEY', default="dddd")
 CONTACT_EMAIL_SUBJECT = 'SOCIAL TEAM BUILDER QUESTION'
 
 LOGIN_REDIRECT_URL = "/"
+
+MARKDOWN_DEUX_STYLES = {
+    "default": {
+        "extras": {
+            "code-friendly": None,
+        },
+        "safe_mode": "escape",
+    },
+}

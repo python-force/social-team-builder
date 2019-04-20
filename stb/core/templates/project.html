@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load markdown_deux_tags %}
 
 
 {% block content %}
@@ -22,7 +23,7 @@
       </div>
 
       <div class="circle--article--body">
-        {{ project.description }}
+        {{ project.description|markdown }}
       </div>
 
       <div class="circle--project--positions">
@@ -31,7 +32,7 @@
           {% for position_id, position_info_list in positions.items %}
           <li>
             <h3>{{ position_info_list.0.title }}</h3>
-            <p>{{ position_info_list.0.description }}</p>
+            <p>{{ position_info_list.0.description|markdown }}</p>
             {% if position_info_list.1 == -1 %}
             <a class="button button-primary" href="{% url 'apply-position' project.id position_id %}">Apply</a>
             {% elif position_info_list.1 == 0 %}

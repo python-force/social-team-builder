@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load markdown_deux_tags %}
 
 
 {% block content %}
@@ -27,7 +28,7 @@
     <div class="grid-70">
       <h1>{{ profile.full_name }}</h1>
       <div class="circle--article--body">
-        {{ profile.description }}
+        {{ profile.description|markdown }}
       </div>
 
       <h2>Past Projects</h2>

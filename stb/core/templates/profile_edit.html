@@ -7,8 +7,9 @@
   <div class="circle--actions--bar">
     <nav class="bounds">
       <ul class="circle--pill--list">
-        <li><a href="applications.html">Applications</a></li>
-        <li><a class="selected" href="profile.html">Profile</a></li>
+        <li><a href="{% url 'applications' %}">Applications</a></li>
+        <li><a class="selected">Profile</a></li>
+        <li><a class="selected" href="{% url 'profile' profile.id %}">{{ profile.user.username }}</a></li>
       </ul>
     </nav>
   </div>
@@ -160,4 +161,7 @@
     });
   });
 </script>
+{{ form.media }}
 {% endblock %}
+
+

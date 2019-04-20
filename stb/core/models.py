@@ -2,11 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
+from markdownx.models import MarkdownxField
 
 class Profile(models.Model):
     user = models.OneToOneField(User, related_name='users', on_delete=models.CASCADE)
     full_name = models.CharField(max_length=50, blank=True)
-    description = models.TextField(blank=True)
+    description = MarkdownxField(blank=True)
     avatar = models.ImageField(blank=True)
 
     def __str__(self):
@@ -29,7 +30,7 @@ class Project(models.Model):
     title = models.CharField(max_length=255, blank=True)
     url = models.URLField(blank=True)
     timeline = models.CharField(max_length=255, blank=True)
-    description = models.TextField(blank=True)
+    description = MarkdownxField(blank=True)
     applicant_requirements = models.TextField(blank=True)
 
     def __str__(self):
@@ -42,7 +43,7 @@ class Project(models.Model):
 class Position(models.Model):
     project = models.ForeignKey(Project, related_name='positions', on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True)
-    description = models.TextField(blank=True)
+    description = MarkdownxField(blank=True)
 
     def __str__(self):
         return self.title
