@@ -9,6 +9,7 @@ class Profile(models.Model):
     full_name = models.CharField(max_length=50, blank=True)
     description = MarkdownxField(blank=True)
     avatar = models.ImageField(blank=True)
+    other_skills = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return self.user.username

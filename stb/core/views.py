@@ -21,7 +21,7 @@ class SignUp(CreateView):
     template_name = "registration/signup.html"
 
 class LogoutView(RedirectView):
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('index')
 
     def get(self, request, *args, **kwargs):
         logout(request)
@@ -205,7 +205,7 @@ class ProfileView(TemplateView):
 class ProfileUpdateView(UpdateWithInlinesView):
     model = Profile
     inlines = [ProfileSkillInline, ProjectInline]
-    fields = ['full_name', 'description', 'avatar']
+    fields = ['full_name', 'description', 'avatar', 'other_skills']
     template_name = 'profile_edit.html'
 
     def get_queryset(self):
