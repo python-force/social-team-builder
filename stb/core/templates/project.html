@@ -33,6 +33,7 @@
           <li>
             <h3>{{ position_info_list.0.title }}</h3>
             <p>{{ position_info_list.0.description|markdown }}</p>
+            <p>{{ position_info_list.0.availability|markdown }}</p>
             {% if position_info_list.1 == -1 %}
             <a class="button button-primary" href="{% url 'apply-position' project.id position_id %}">Apply</a>
             {% elif position_info_list.1 == 0 %}

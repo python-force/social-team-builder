@@ -1,16 +1,17 @@
-from django.views.generic import TemplateView, CreateView, DetailView, UpdateView
+from django.views.generic import TemplateView, CreateView, DetailView, UpdateView, RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import logout
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.models import User
 from stb.core.models import Profile, Skill, Project, Position, Position_Application
 from stb.core.forms import UserCreateForm
 from django.http import Http404
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSetFactory
-from django.views.generic import RedirectView
 from django.shortcuts import get_object_or_404, get_list_or_404
 from django.db import IntegrityError
 from django.contrib import messages
 import collections
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.forms.formsets import all_valid
 
@@ -19,21 +20,37 @@ class SignUp(CreateView):
     success_url = reverse_lazy('login')
     template_name = "registration/signup.html"
 
+class LogoutView(RedirectView):
+    success_url = reverse_lazy('home')
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return super().get(self, request, *args, **kwargs)
+
 
 class Test(TemplateView):
     template_name = "3.html"
 
-class Homepage(TemplateView):
+class Homepage(LoginRequiredMixin, TemplateView):
     template_name = "index.html"
 
     model = Project
 
+    def get_queryset(self):
+        term = self.request.GET.get('q')
+        if term:
+            projects = Project.objects.filter(
+                Q(title__icontains=term) |
+                Q(description__icontains=term)
+            )
+        else:
+            projects = Project.objects.all()
+        return projects
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # profile = Profile.objects.get(user=self.request.user)
-        projects = Project.objects.all()
-        context['projects'] = projects
-        #context['positions'] = Position.objects.all().order_by('title')
+        context['projects'] = self.get_queryset()
         context['positions'] = Position.objects.order_by('title').distinct('title')
         return context
 
@@ -60,6 +77,25 @@ class Applications(TemplateView):
                 projects.append(applicant.position.project)
                 positions.append(applicant.position)
                 applicant_dict[applicant.id] = project_list
+        elif 'status' in self.kwargs:
+            for applicant in applicants:
+                project_list = []
+                project_list.append(applicant.user)
+                project_list.append(applicant.position.project)
+                project_list.append(applicant.position)
+                project_list.append(applicant.status)
+                projects.append(applicant.position.project)
+                positions.append(applicant.position)
+                applicant_dict[applicant.id] = project_list
+                status = self.kwargs.get('status')
+                if status == 'accepted':
+                    applicant_dict = {k: v for (k, v) in applicant_dict.items() if v[-1] == 1}
+                elif status == 'rejected':
+                    applicant_dict = {k: v for (k, v) in applicant_dict.items() if v[-1] == 2}
+                elif status == 'new-applications':
+                    applicant_dict = {k: v for (k, v) in applicant_dict.items() if v[-1] == 0}
+                else:
+                    raise Http404
         else:
             if 'project' in self.kwargs:
                 obj = Project.objects.get(id=self.kwargs.get('project'))
@@ -162,6 +198,7 @@ class ProfileView(TemplateView):
         context['profile'] = get_object_or_404(Profile, id=self.kwargs.get('pk'))
         context['skills'] = context['profile'].skills.all()
         context['projects'] = context['profile'].projects.all()
+        context['approved_projects'] = Position_Application.objects.filter(user_id=context['profile'].user.id, status=1)
         return context
 
 
@@ -180,8 +217,8 @@ class ProfileUpdateView(UpdateWithInlinesView):
 
 class PositionInline(InlineFormSetFactory):
     model = Position
-    fields = ['title', 'description']
-    initial = [{'title': 'Enter Position'}]
+    fields = ['title', 'description', 'availability']
+    initial = [{'title': 'Enter Position', 'availability': 'Availability for Applicant'}]
     factory_kwargs = {'extra': 1, 'max_num': None,
                       'can_order': False, 'can_delete': True}
     prefix = 'position_formset'

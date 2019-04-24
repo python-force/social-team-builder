@@ -44,6 +44,7 @@ class Position(models.Model):
     project = models.ForeignKey(Project, related_name='positions', on_delete=models.CASCADE)
     title = models.CharField(max_length=100, blank=True)
     description = MarkdownxField(blank=True)
+    availability = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return self.title

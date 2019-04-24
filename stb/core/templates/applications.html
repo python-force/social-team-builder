@@ -22,10 +22,10 @@
       <div class="circle--filter circle--secondary--module">
         <h4>Status</h4>
         <ul class="circle--filter--list">
-          <li><a class="selected">All Applications</a></li>
-          <li><a href="{% url 'applications' %}">New Applications</a></li>
-          <li><a>Accepted</a></li>
-          <li><a>Rejected</a></li>
+          <li><a class="selected" href="{% url 'applications' %}">All Applications</a></li>
+          <li><a href="{% url 'applications-status' 'new-applications' %}">New Applications</a></li>
+          <li><a href="{% url 'applications-status' 'accepted' %}">Accepted</a></li>
+          <li><a href="{% url 'applications-status' 'rejected' %}">Rejected</a></li>
         </ul>
       </div>
 

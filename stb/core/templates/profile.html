@@ -40,22 +40,16 @@
           </tr>
         </thead>
         <tbody>
+          {% for project in approved_projects %}
           <tr class="clickable-row" data-href="project.html">
             <td>
-              <h3>Invoice Delivery Tool</h3>
+              <h3>{{ project.position.project.title }}</h3>
             </td>
             <td class="circle--cell--right">
-              <span class="secondary-label">Rails Developer</span>
+              <span class="secondary-label">{{ project.position.title }}</span>
             </td>
           </tr>
-          <tr class="clickable-row" data-href="project.html">
-            <td>
-              <h3>Twitter Client</h3>
-            </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Designer</span>
-            </td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
