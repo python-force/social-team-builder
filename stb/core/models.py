@@ -5,11 +5,13 @@ from django.utils import timezone
 from markdownx.models import MarkdownxField
 
 class Profile(models.Model):
+    pub_date = models.DateTimeField(default=timezone.now)
     user = models.OneToOneField(User, related_name='users', on_delete=models.CASCADE)
     full_name = models.CharField(max_length=50, blank=True)
     description = MarkdownxField(blank=True)
     avatar = models.ImageField(blank=True)
     other_skills = models.CharField(max_length=255, blank=True)
+
 
     def __str__(self):
         return self.user.username

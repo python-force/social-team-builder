@@ -21,11 +21,11 @@ class SignUp(CreateView):
     template_name = "registration/signup.html"
 
 class LogoutView(RedirectView):
-    success_url = reverse_lazy('index')
+    url = reverse_lazy('index')
 
     def get(self, request, *args, **kwargs):
         logout(request)
-        return super().get(self, request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class Test(TemplateView):
