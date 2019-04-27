@@ -13,21 +13,24 @@ from stb.core.models import Profile, Skill, Project, Position
 class EntireAppTest(TestCase):
 
     """Updating Profile"""
-    def setUp(self):
+
+    @classmethod
+    def setUpClass(cls):
         """Creating User"""
-        self.user = User.objects.create_user(
+        super().setUpClass()
+        cls.user = User.objects.create_user(
             username='johnconnor',
             email='dude@nasa.gov',
             password='terminator'
         )
-        self.profile = Profile.objects.get(user=self.user)
+        cls.profile = Profile.objects.get(user=cls.user)
         skill = Skill()
         skill.save()
-        skill.profile.add(self.profile.id)
+        skill.profile.add(cls.profile.id)
         skill.title='python'
         skill.save()
 
-        """Login User"""
+    def setUp(self):
         self.client.login(username='johnconnor', password='terminator')
 
 
@@ -56,14 +59,24 @@ class EntireAppTest(TestCase):
                 'position_formset-0-description': 'description',
             },
         )
-        print(response.status_code)
-        project = Project.objects.get(title='NASA JPL')
-        print(project.title)
+        project = Project.objects.get(id=1)
         position = Position.objects.get(project=project)
-        position.refresh_from_db()
-        print(position.id)
-        print(position.title)
-        print(position.description)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(project.title, 'NASA JPL')
+        self.assertEqual(position.title, 'Python Developer')
+
+    def test_homepage(self):
+        url = '/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        positions = Position.objects.all()
+        project = Project.objects.all()
+        print(project)
+        print(positions)
+        # print(response.context)
+        self.assertEqual(response.status_code, 200)
 
 
     """
