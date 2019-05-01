@@ -4,8 +4,9 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 from collections import OrderedDict
+from django.contrib.messages import get_messages
 
-from stb.core.models import Profile, Skill, Project, Position
+from stb.core.models import Profile, Skill, Project, Position, Position_Application
 
 # TO DO
 # Cannot change stuff when not logged in AnonymousUSER
@@ -112,6 +113,18 @@ class EntireAppTest(TestCase):
     def setUp(self):
         self.client.login(username='johnconnor', password='terminator')
 
+        """
+        User 1 Applying for User 2 Project
+        Position id = 3
+        project=cls.project2,
+        title='Rails Developer',
+        description='Rails Development is...',
+        :return:
+        """
+        # Applied for the Project
+        url = '/project/2/apply/3/'
+        self.client.get(url, data={})
+
 
     def test_create_account(self):
         self.user = User.objects.get(email='dude@nasa.gov')
@@ -143,6 +156,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(project.title, 'BLACK HOLE DISCOVERY')
         self.assertEqual(position[0].title, 'Rails Developer')
 
+    """
     def test_edit_project(self):
         url = '/project/1/edit/'
         response = self.client.put(
@@ -168,6 +182,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(project.title, 'BLACK HOLE DISCOVERY')
         self.assertEqual(position[2].title, 'C4D Developer')
+    """
 
     def test_homepage(self):
         url = '/'
@@ -268,51 +283,278 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-    """
-    def test_update_profile(self):
-
-        url = '/profile/3/edit/'
-        data = {"full_name": "John Doe",
-                "description": "He likes to fly",
-                "other_skills": "Kiteboarding, Technology",}
-        response = self.client.put(url, data)
-        print(response.status_code)
-
+    def test_apply_position_view(self):
         
-
-        response = self.client.put(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.profile.refresh_from_db()
-        self.assertEqual(self.profile.user.username, 'johnconnor')
-        self.assertEqual(self.profile.bio, 'About John')
-     
-        self.profile = Profile.objects.get(user=self.user)
-        self.profile.full_name = 'John Doe'
-        self.profile.description = 'He likes to fly',
-        self.profile.other_skills = 'Kiteboarding, Technology',
-        self.profile.save()
-        self.profile.refresh_from_db()
-        now = timezone.now()
-        self.assertLess(self.profile.pub_date, now)
-        self.assertLess(self.profile.other_skills, 'Kiteboarding, Technology')
-
- 
+        # Applied for the Project
+        url = '/project/2/apply/4/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        position = Position_Application.objects.filter(position_id=4)
+        self.assertEqual(position.count(), 1)
+        self.assertEqual(response.status_code, 302)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[1]), 'You have now applied for Android Developer.')
 
 
 
+    def test_apply_for_same_position_view(self):
 
-    Profile View
-    def test_profile_view(self):
-        
-        # reverse('profile', 3)
-        self.client = Client()
-        print(self.profile)
-        response = self.client.get('/profile/3/')
+        # Applied for the same one
+        url = '/project/2/apply/3/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        position = Position_Application.objects.filter(position_id=3)
+        self.assertEqual(position.count(), 1)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[1]), 'You have already applied for Rails Developer position')
+
+
+    def test_apply_for_my_own_position_view(self):
+
+        url = '/project/1/apply/2/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        position = Position_Application.objects.filter(position_id=3)
+        self.assertEqual(position.count(), 1)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[1]), 'You cannot apply for your own iOS Developer position')
+
+
+    def test_apply_was_hired_view(self):
+
+        position = Position_Application.objects.get(position_id=3)
+        position.status = 1
+        position.save()
+
+        url = '/project/2/apply/3/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[1]), 'You were hired already for the Rails Developer position')
+
+    def test_apply_was_rejected_view(self):
+
+        position = Position_Application.objects.get(position_id=3)
+        position.status = 2
+        position.save()
+
+        url = '/project/2/apply/3/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[1]), 'You were rejected already for the Rails Developer position')
+
+    def test_cancel_apply_position_view(self):
+
+        self.test_apply_position_view()
+
+        # Cancel Apply for the project
+
+        url = '/project/2/cancel-apply/4/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        positions = Position_Application.objects.all()
+        self.assertEqual(positions.count(), 1)
+        self.assertEqual(response.status_code, 302)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[2]), 'You have canceled the application.')
+
+    def test_cancel_apply_position_already_hired_view(self):
+
+        self.test_apply_position_view()
+
+        # Cancel Apply for the project already hired
+        position = Position_Application.objects.get(position_id=4)
+        position.status = 1
+        position.save()
+
+        url = '/project/2/cancel-apply/4/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        positions = Position_Application.objects.all()
+        self.assertEqual(positions.count(), 2)
+        self.assertEqual(response.status_code, 302)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[2]), 'You were already hired for the Android Developer position. Too late buddy!')
+
+    def test_cancel_apply_position_already_rejected_view(self):
+
+        self.test_apply_position_view()
+
+        # Cancel Apply for the project already rejected
+        position = Position_Application.objects.get(position_id=4)
+        position.status = 2
+        position.save()
+
+        url = '/project/2/cancel-apply/4/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        positions = Position_Application.objects.all()
+        self.assertEqual(positions.count(), 2)
+        self.assertEqual(response.status_code, 302)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[2]), 'You were already rejected for the Android Developer position. Too late buddy!')
+
+    def test_cancel_apply_position_never_applied_view(self):
+
+        url = '/project/2/cancel-apply/4/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        positions = Position_Application.objects.all()
+        self.assertEqual(positions.count(), 1)
+        self.assertEqual(response.status_code, 302)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[1]), 'You have never applied for the Android Developer position. Maybe you should consider.')
+
+    def test_accept_profile_position(self):
+        """
+        project=cls.project2,
+        title='Rails Developer',
+        description='Rails Development is...',
+        :return:
+        """
+
+        self.client.login(username='linda', password='linda-terminator')
+
+        url = '/profile/1/accept/3/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        self.assertEqual(response.status_code, 302)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[1]), 'Applicant John Connor was accepted for the Rails Developer position')
+
+    def test_accept_profile_position_already_hired_view(self):
+        """
+        project=cls.project2,
+        title='Rails Developer',
+        description='Rails Development is...',
+        :return:
+        """
+
+        self.test_accept_profile_position()
+
+        url = '/profile/1/accept/3/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        self.assertEqual(response.status_code, 302)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[2]), 'The Rails Developer position was already filled')
+
+    def test_accept_profile_with_no_position_applied(self):
+        """
+        project=cls.project2,
+        title='Rails Developer',
+        description='Rails Development is...',
+        :return:
+        """
+
+        self.client.login(username='linda', password='linda-terminator')
+
+        url = '/profile/1/accept/5/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_applications_list_view(self):
+
+        self.client.login(username='linda', password='linda-terminator')
+
+        url = '/applications/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        for key, value in response.context[-1]['applicant_dict'].items():
+            self.assertEqual(key, 9)
+            self.assertEqual(value[0].username, 'johnconnor')
+            self.assertEqual(value[1].title, 'SPACE X')
+            self.assertEqual(value[2].title, 'Rails Developer')
+            self.assertEqual(value[3], None)
         self.assertEqual(response.status_code, 200)
-        # print(response.context['profile'].full_name)
-        #self.assertEqual(response.context[-1]['profile'].full_name, 'John Doe')
-        ##self.assertEqual(response.context[-1]['skills'], '')
-        #self.assertEqual(response.context[-1]['projects'], '')
-        #self.assertEqual(response.context[-1]['approved_projects'], '')
 
-"""
+    def test_applications_list_status_view(self):
+
+        self.client.login(username='linda', password='linda-terminator')
+
+        url = '/applications/new-applications/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        for key, value in response.context[-1]['applicant_dict'].items():
+            self.assertEqual(key, 6)
+            self.assertEqual(value[0].username, 'johnconnor')
+            self.assertEqual(value[1].title, 'SPACE X')
+            self.assertEqual(value[2].title, 'Rails Developer')
+            self.assertEqual(value[3], None)
+        self.assertEqual(response.status_code, 200)
+
+    def test_applications_list_project_view(self):
+
+        self.client.login(username='linda', password='linda-terminator')
+
+        url = '/applications/project/2/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        for key, value in response.context[-1]['applicant_dict'].items():
+            self.assertEqual(key, 7)
+            self.assertEqual(value[0].username, 'johnconnor')
+            self.assertEqual(value[1].title, 'SPACE X')
+            self.assertEqual(value[2].title, 'Rails Developer')
+            self.assertEqual(value[3], None)
+        self.assertEqual(response.status_code, 200)
+
+    def test_applications_list_project_0_view(self):
+
+        self.client.login(username='linda', password='linda-terminator')
+
+        url = '/applications/project/3/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        self.assertEqual(response.context[-1]['applicant_dict'], OrderedDict())
+        self.assertEqual(response.status_code, 200)
+
+    def test_applications_list_position_view(self):
+
+        self.client.login(username='linda', password='linda-terminator')
+
+        url = '/applications/position/3/'
+        response = self.client.get(
+            url,
+            data={},
+        )
+        for key, value in response.context[-1]['applicant_dict'].items():
+            self.assertEqual(key, 5)
+            self.assertEqual(value[0].username, 'johnconnor')
+            self.assertEqual(value[1].title, 'SPACE X')
+            self.assertEqual(value[2].title, 'Rails Developer')
+            self.assertEqual(value[3], None)
+        self.assertEqual(response.status_code, 200)

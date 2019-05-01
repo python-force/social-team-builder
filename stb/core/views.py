@@ -350,26 +350,35 @@ class ApplyPositionView(RedirectView):
         position_profile = get_object_or_404(Profile, id=position.project.profile_id)
 
         if position.project.profile.user != self.request.user:
-            try:
-                obj, created = Position_Application.objects.get_or_create(
-                    user=self.request.user,
-                    position=position,
-                    profile=position_profile,
-                    status=0
-                )
-            except IntegrityError:
-                messages.warning(
-                    self.request,
-                    ("You have already applied for {} "
-                     "position").format(
-                        position.title
-                    )
-                )
-            else:
+            obj, created = Position_Application.objects.get_or_create(
+                user=self.request.user,
+                position=position,
+                profile=position_profile,
+            )
+            if created:
                 messages.success(
                     self.request,
                     "You have now applied for {}.".format(position.title)
                 )
+            else:
+                if obj.status == 1:
+                    messages.success(
+                        self.request,
+                        "You were hired already for the {} position".format(position.title)
+                    )
+                if obj.status == 2:
+                    messages.success(
+                        self.request,
+                        "You were rejected already for the {} position".format(position.title)
+                    )
+                else:
+                    messages.warning(
+                        self.request,
+                        ("You have already applied for {} "
+                         "position").format(
+                            position.title
+                        )
+                    )
         else:
             messages.warning(
                 self.request,
@@ -387,29 +396,44 @@ class CancelApplyView(RedirectView):
                        kwargs={"pk": self.kwargs.get("pk")})
 
     def get(self, request, *args, **kwargs):
-        position = get_object_or_404(Position, id=self.kwargs.get("position"))
-
+        position_main = get_object_or_404(Position, id=self.kwargs.get("position"))
         try:
             position = Position_Application.objects.get(
                 user=self.request.user,
-                position=position,
-                profile=position.project.profile_id,
-                status=0
+                position=position_main,
+                profile=position_main.project.profile_id,
             )
         except Position_Application.DoesNotExist:
             messages.warning(
                 self.request,
-                ("You were already hired for the {} "
-                 "position. Too late buddy!").format(
-                    position.title
+                ("You have never applied for the {} "
+                 "position. Maybe you should consider.").format(
+                    position_main.title
                 )
             )
         else:
-            position.delete()
-            messages.success(
-                self.request,
-                "You have canceled the application."
-            )
+            if position.status == 1:
+                messages.warning(
+                    self.request,
+                    ("You were already hired for the {} "
+                     "position. Too late buddy!").format(
+                        position_main.title
+                    )
+                )
+            elif position.status == 2:
+                messages.warning(
+                    self.request,
+                    ("You were already rejected for the {} "
+                     "position. Too late buddy!").format(
+                        position_main.title
+                    )
+                )
+            else:
+                position.delete()
+                messages.success(
+                    self.request,
+                    "You have canceled the application."
+                )
         return super().get(request, *args, **kwargs)
 
 
