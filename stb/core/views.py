@@ -280,7 +280,7 @@ class ProjectDeleteView(RedirectView):
 
 
 class ProjectNeedsView(TemplateView):
-    template_name = "project-needs.html"
+    template_name = "index.html"
 
     model = Project
 
@@ -289,6 +289,7 @@ class ProjectNeedsView(TemplateView):
         position = Position.objects.get(id=self.kwargs.get('pk'))
         context["position"] = position
         context["projects"] = Project.objects.all().filter(positions__title=position.title)
+        context['positions'] = Position.objects.order_by('title').distinct('title')
         return context
 
 
