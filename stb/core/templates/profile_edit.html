@@ -4,6 +4,152 @@
 
 {% block content %}
 
+<div class="app-main">
+    <div class="app-sidebar sidebar-shadow">
+        <div class="app-header__logo">
+            <div class="logo-src"></div>
+            <div class="header__pane ml-auto">
+                <div>
+                    <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
+                        <span class="hamburger-box">
+                            <span class="hamburger-inner"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="app-header__mobile-menu">
+            <div>
+                <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="app-header__menu">
+            <span>
+                <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
+                    <span class="btn-icon-wrapper">
+                        <i class="fa fa-ellipsis-v fa-w-6"></i>
+                    </span>
+                </button>
+            </span>
+        </div>
+        <div class="scrollbar-sidebar">
+            <div class="app-sidebar__inner">
+                <img style="width: 100%; margin-top: 20px;" src="{{ MEDIA_URL }}{{ profile.avatar }}" alt="{{ profile.full.name }} profile picture">
+                <ul class="vertical-nav-menu">
+                    <li class="app-sidebar__heading">My Skills</li>
+                    {% for skill in skills %}
+                    <li>{{ skill.title }}</li>
+                    {% endfor %}
+                </ul>
+                {{ profile.other_skills }}
+                <ul class="vertical-nav-menu">
+                    <li class="app-sidebar__heading">My Projects</li>
+                    {% for project in projects %}
+                        <li>
+                          <a href="{% url 'project' project.id %}"><i class="metismenu-icon pe-7s-rocket"></i>{{ project.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="pe-7s-car icon-gradient bg-mean-fruit">
+                            </i>
+                        </div>
+                        <div><h1>{{ profile.full_name }}</h1>
+                            <div class="page-title-subheading">{{ profile.user.username }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-title-actions">
+                        <button onclick="window.location.href = '{% url "profile-edit" profile.id %}';" type="button" data-placement="bottom" class="mr-3 btn btn-success">
+                            <i class="fa fa-business-time fa-w-20"></i>
+                            Edit Profile
+                        </button>
+                    </div>
+                </div>
+                <div class="tab-pane tabs-animation fade active show" id="tab-content-1" role="tabpanel">
+                    <div class="main-card mb-3 card">
+                        <div class="card-body"><h5 class="card-title">Grid</h5>
+                            <form method="post" enctype="multipart/form-data">
+                              {% csrf_token %}
+                            {{ form }}
+                              <div class="inline-set">
+
+      {{ inlines.0.management_form}}
+      <h4>My Skills</h4>
+      <ul class="circle--clone--list">
+      {% for formset in inlines.0 %}
+        <li class="inline-skills">{{ formset }}</li>
+      {% endfor %}
+      </ul>
+
+
+      {{ inlines.1.management_form}}
+      <h4>My Projects</h4>
+      <ul class="circle--clone--list">
+      {% for formset in inlines.1 %}
+        <li class="inline-projects">{{ formset }}</li>
+      {% endfor %}
+      </ul>
+    </div>
+                              <input type="submit" value="Submit" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="app-wrapper-footer">
+            <div class="app-footer">
+                <div class="app-footer__inner">
+                    <div class="app-footer-left">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a href="javascript:void(0);" class="nav-link">
+                                    Footer Link 1
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:void(0);" class="nav-link">
+                                    Footer Link 2
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="app-footer-right">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a href="javascript:void(0);" class="nav-link">
+                                    Footer Link 3
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:void(0);" class="nav-link">
+                                    <div class="badge badge-success mr-1 ml-0">
+                                        <small>NEW</small>
+                                    </div>
+                                    Footer Link 4
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
   <div class="circle--actions--bar">
     <nav class="bounds">
       <ul class="circle--pill--list">
@@ -14,15 +160,14 @@
     </nav>
   </div>
 
-  <form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
+
   <div class="bounds circle--page">
     <div class="circle--page--header circle--fluid">
       <div class="circle--fluid--cell circle--fluid--primary">
         <h2>Profile</h2>
       </div>
       <div class="circle--fluid--cell circle--fluid--secondary">
-         <input type="submit" value="Submit" />
+
         <!-- <a class="button button-primary icon-on-left" href="profile.html">Save Changes</a> -->
       </div>
     </div>
@@ -30,7 +175,7 @@
     <div class="grid-70">
 
 
-        {{ form }}
+
 
 
 
@@ -74,25 +219,7 @@
 
     <div class="grid-25 grid-push-5">
 
-    <div class="inline-set">
 
-      {{ inlines.0.management_form}}
-      <h4>My Skills</h4>
-      <ul class="circle--clone--list">
-      {% for formset in inlines.0 %}
-        <li class="inline-skills">{{ formset }}</li>
-      {% endfor %}
-      </ul>
-
-
-      {{ inlines.1.management_form}}
-      <h4>My Projects</h4>
-      <ul class="circle--clone--list">
-      {% for formset in inlines.1 %}
-        <li class="inline-projects">{{ formset }}</li>
-      {% endfor %}
-      </ul>
-    </div>
 
 
       <!--
