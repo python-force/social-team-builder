@@ -47,14 +47,6 @@
                             All
                         </a>
                     </li>
-                    {% for position in positions %}
-                    <li>
-                        <a href="">
-                            <i class="metismenu-icon pe-7s-rocket"></i>
-                            {{ position }}
-                        </a>
-                    </li>
-                    {% endfor %}
                 </ul>
             </div>
         </div>
@@ -74,9 +66,9 @@
                         </div>
                     </div>
                     <div class="page-title-actions">
-                        <button onclick="window.location.href = '';" type="button" data-placement="bottom" class="mr-3 btn btn-success">
+                        <button onclick="window.location.href = '{% url "project-edit" project.id %}';" type="button" data-placement="bottom" class="mr-3 btn btn-success">
                             <i class="fa fa-business-time fa-w-20"></i>
-                            New Project
+                            Edit Project
                         </button>
                     </div>
                 </div>
@@ -84,31 +76,71 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="main-card mb-3 card">
-                        <div class="card-body"><h5 class="card-title">Basic Example</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p></div>
+                        <div class="card-body">
+                             <h1 class="card-title">{{ project.title }}</h1>
+                            <p class="circle--article--byline">Project Owner: <a>{{ app_profile.full_name }}</a></p>
+                            {{ project.description|markdown }}
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="main-card mb-3 card"><img width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&amp;txt=318%C3%97180&amp;w=318&amp;h=180" alt="Card image cap" class="card-img-top">
-                        <div class="card-body"><h5 class="card-title">Card title</h5><h6 class="card-subtitle">Card subtitle</h6>Some quick example text to build on the card title and make up the bulk of the card's content.
-                            <button class="btn btn-secondary">Button</button>
+                    <div class="main-card mb-3 card">
+                        <div class="card-body">
+                            <h5 class="card-title">Project Needs</h5>
+                            {% for position_id, position_info_list in positions.items %}
+                            <a href="{% url 'project-needs' position_id %}">{{ position.title }}</a>
+                            {% endfor %}
                         </div>
                     </div>
-                    <div class="main-card mb-3 card"><img width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&amp;txt=318%C3%97180&amp;w=318&amp;h=180" alt="Card image cap" class="card-img-top">
-                        <div class="card-body"><h5 class="card-title">Card title</h5><h6 class="card-subtitle">Card subtitle</h6>Some quick example text to build on the card title and make up the bulk of the card's content.
-                            <button class="btn btn-secondary">Button</button>
+                    <div class="main-card mb-3 card">
+                        <div class="card-body">
+                            <h5 class="card-title">Project Timeline</h5>
+                            <p>{{ project.timeline }}</p>
+                        </div>
+                    </div>
+                    <div class="main-card mb-3 card">
+                        <div class="card-body">
+                            <h5 class="card-title">Applicant Requirements</h5>
+                            <p>{{ project.applicant_requirements }}</p>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="pe-7s-car icon-gradient bg-mean-fruit">
+                            </i>
+                        </div>
+                        <div>Positions
+                            <div class="page-title-subheading">Positions to apply to.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% for position_id, position_info_list in positions.items %}
             <div class="row">
                 <div class="col-md-12">
                     <div class="main-card mb-3 card">
-                        <div class="card-body"><h5 class="card-title">Basic Example</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p></div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ position_info_list.0.title }}</h5>
+                            <p>{{ position_info_list.0.description|markdown }}</p>
+                            <p>{{ position_info_list.0.availability|markdown }}</p>
+                            {% if position_info_list.1 == -1 %}
+                            <a href="{% url 'apply-position' project.id position_id %}" class="btn-wide btn btn-success">Apply</a>
+                            {% elif position_info_list.1 == 0 %}
+                            <a class="btn-wide btn btn-light disabled">Apply</a>
+                            <a href="{% url 'apply-position' project.id position_id %}" class="btn-wide btn btn-danger">Cancel Apply?</a>
+                            {% elif position_info_list.1 == 1 %}
+                            <a class="btn-wide btn btn-success disabled">Position Filled</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
         <div class="app-wrapper-footer">
             <div class="app-footer">
