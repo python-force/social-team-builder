@@ -6,3 +6,4 @@ idea
 stb/media
 staticfiles
 .DS_Store
+db.dump
