@@ -14,6 +14,7 @@ import collections
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.forms.formsets import all_valid
+from stb.core.forms import ProfileForm, SkillForm, ProjectForm
 
 class SignUp(CreateView):
     form_class = UserCreateForm
@@ -174,6 +175,7 @@ class ProfileSkillInline(InlineFormSetFactory):
 
 class SkillInline(InlineFormSetFactory):
     model = Skill
+    form_class = SkillForm
     inlines = [ProfileSkillInline]
     factory_kwargs = {'extra': 1, 'max_num': None,
                       'can_order': False, 'can_delete': True}
@@ -182,6 +184,7 @@ class SkillInline(InlineFormSetFactory):
 
 class ProjectInline(InlineFormSetFactory):
     model = Project
+    form_class = ProjectForm
     fields = ['title', 'url']
     factory_kwargs = {'extra': 1, 'max_num': None,
                       'can_order': False, 'can_delete': True}
@@ -204,8 +207,8 @@ class ProfileView(TemplateView):
 
 class ProfileUpdateView(UpdateWithInlinesView):
     model = Profile
+    form_class = ProfileForm
     inlines = [ProfileSkillInline, ProjectInline]
-    fields = ['full_name', 'description', 'avatar', 'other_skills']
     template_name = 'profile_edit.html'
 
     def get_queryset(self):

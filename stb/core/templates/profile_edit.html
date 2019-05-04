@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block addcss %}
+
+<style>
+    ul {
+        list-style: none;
+        padding-inline-start: 0px;
+    }
+</style>
+
+{% endblock %}
 
 {% block content %}
 
@@ -58,6 +68,7 @@
         </div>
     </div>
     <div class="app-main__outer">
+        <form method="post" enctype="multipart/form-data">
         <div class="app-main__inner">
             <div class="app-page-title">
                 <div class="page-title-wrapper">
@@ -66,8 +77,8 @@
                             <i class="pe-7s-car icon-gradient bg-mean-fruit">
                             </i>
                         </div>
-                        <div><h1>{{ profile.full_name }}</h1>
-                            <div class="page-title-subheading">{{ profile.user.username }}
+                        <div><h1>Name: {{ profile.full_name }}</h1>
+                            <div class="page-title-subheading">Username: {{ profile.user.username }}
                             </div>
                         </div>
                     </div>
@@ -80,36 +91,59 @@
                 </div>
                 <div class="tab-pane tabs-animation fade active show" id="tab-content-1" role="tabpanel">
                     <div class="main-card mb-3 card">
-                        <div class="card-body"><h5 class="card-title">Grid</h5>
-                            <form method="post" enctype="multipart/form-data">
+                        <div class="card-body"><h5 class="card-title">Profile Edit</h5>
+
                               {% csrf_token %}
                             {{ form }}
-                              <div class="inline-set">
-
-      {{ inlines.0.management_form}}
-      <h4>My Skills</h4>
-      <ul class="circle--clone--list">
-      {% for formset in inlines.0 %}
-        <li class="inline-skills">{{ formset }}</li>
-      {% endfor %}
-      </ul>
 
 
-      {{ inlines.1.management_form}}
-      <h4>My Projects</h4>
-      <ul class="circle--clone--list">
-      {% for formset in inlines.1 %}
-        <li class="inline-projects">{{ formset }}</li>
-      {% endfor %}
-      </ul>
-    </div>
-                              <input type="submit" value="Submit" />
-                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="main-card mb-3 card">
+                    <div class="card-body"><h5 class="card-title">Inline</h5>
+                        <div>
+                            <div class="inline-set">
+
+                                  {{ inlines.0.management_form}}
+                                  <h4>My Skills</h4>
+                                  <ul class="circle--clone--list">
+                                  {% for formset in inlines.0 %}
+                                    <li class="inline-skills">{{ formset }}</li>
+                                  {% endfor %}
+                                  </ul>
+
+
+
+                                </div>
+                             <input type="submit" value="Submit" />
+                        </div>
+                    </div>
+                </div>
+                <div class="main-card mb-3 card">
+                    <div class="card-body"><h5 class="card-title">Inline</h5>
+                        <div>
+                            <div class="inline-set">
+
+
+
+
+                                  {{ inlines.1.management_form}}
+                                  <h4>My Projects</h4>
+                                  <ul class="circle--clone--list">
+                                  {% for formset in inlines.1 %}
+                                    <li class="inline-projects">{{ formset }}</li>
+                                  {% endfor %}
+                                  </ul>
+                                </div>
+                             <input type="submit" value="Submit" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        </form>
         <div class="app-wrapper-footer">
             <div class="app-footer">
                 <div class="app-footer__inner">
@@ -273,9 +307,14 @@
 
 {% block js %}
 <!-- Include formset plugin -->
+<script
+  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+  crossorigin="anonymous"></script>
 <script src="{% static 'extra-js/jquery.formset.js' %}"></script>
 <script>
-  $( document ).ready(function() {
+  $(document).ready(function() {
+    $('select').addClass('form-control-sm form-control');
     $('.inline-skills').formset({
         prefix: '{{ inlines.0.prefix }}',
         addText: 'add link',

@@ -146,7 +146,7 @@
                                         {% endif %}
                                     </td>
                                     <td class="text-center">
-                                        <button onclick="window.location.href = '';" type="button" id="PopoverCustomT-1" class="btn btn-primary btn-sm">Details</button>
+                                        <button onclick="window.location.href = '{% url "profile" value.0.users.id %}';" type="button" id="PopoverCustomT-1" class="btn btn-primary btn-sm">Details</button>
                                     </td>
                                 </tr>
                                 {% endfor %}
