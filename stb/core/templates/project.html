@@ -88,7 +88,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Project Needs</h5>
                             {% for position_id, position_info_list in positions.items %}
-                            <a href="{% url 'project-needs' position_id %}">{{ position.title }}</a>
+                                {{ position_info_list.0.title }}
                             {% endfor %}
                         </div>
                     </div>
