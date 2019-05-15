@@ -135,8 +135,9 @@
                     <div class="main-card mb-3 card">
                         <div class="card-body">
 
-
+                            <div class="addremove">
                            {{ formset }}
+                                </div>
 
                         </div>
                     </div>
@@ -255,7 +256,7 @@
 <script src="{% static 'extra-js/jquery.formset.js' %}"></script>
 <script>
   $( document ).ready(function() {
-    $('.card-body').formset({
+    $('.addremove').formset({
         prefix: '{{ inlines.0.prefix }}',
         addText: 'add link',
         deleteText: 'remove'
