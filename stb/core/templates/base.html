@@ -60,9 +60,12 @@
                 <div class="app-header-left">
                     <div class="search-wrapper">
                         <div class="input-holder">
-                            <input type="text" class="search-input" placeholder="Type to search">
-                            <button class="search-icon"><span></span></button>
+                            <form action="{% url 'index' %}" method="GET">
+                            <input type="text" name="q" class="search-input" placeholder="Type to search">
+                            <button class="search-icon" type="submit"><span></span></button>
+                            </form>
                         </div>
+
                         <button class="close"></button>
                     </div>
                     <ul class="header-menu nav">

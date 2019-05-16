@@ -14,7 +14,7 @@ import collections
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.forms.formsets import all_valid
-from stb.core.forms import ProfileForm, SkillForm, ProjectForm
+from stb.core.forms import ProfileForm, SkillForm, ProjectForm, PositionForm
 
 class SignUp(CreateView):
     form_class = UserCreateForm
@@ -220,7 +220,7 @@ class ProfileUpdateView(UpdateWithInlinesView):
 
 class PositionInline(InlineFormSetFactory):
     model = Position
-    fields = ['title', 'description', 'availability']
+    form_class = PositionForm
     initial = [{'title': 'Enter Position', 'availability': 'Availability for Applicant'}]
     factory_kwargs = {'extra': 1, 'max_num': None,
                       'can_order': False, 'can_delete': True}
@@ -228,8 +228,8 @@ class PositionInline(InlineFormSetFactory):
 
 class CreateProjectView(CreateWithInlinesView):
     model = Project
+    form_class = ProjectForm
     inlines = [PositionInline]
-    fields = ['title', 'description', 'timeline', 'applicant_requirements']
     template_name = 'project_new.html'
 
     def forms_valid(self, form, inlines):
@@ -245,8 +245,9 @@ class CreateProjectView(CreateWithInlinesView):
 
 class ProjectUpdateView(UpdateWithInlinesView):
     model = Project
+    form_class = ProjectForm
     inlines = [PositionInline]
-    fields = ['title', 'description', 'timeline', 'applicant_requirements']
+    # fields = ['title', 'description', 'timeline', 'applicant_requirements']
     template_name = 'project_edit.html'
 
     def get_object(self, queryset=None):

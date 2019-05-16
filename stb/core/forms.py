@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms.models import inlineformset_factory
-from stb.core.models import Profile, Skill, Project
+from stb.core.models import Profile, Skill, Project, Position
 from django import forms
 
 # ProfileFormSet = inlineformset_factory(Profile, Skill, fields = ['profile', 'title'], can_delete = True)
@@ -27,15 +27,30 @@ class SkillForm(forms.ModelForm):
         fields = ['title']
 
 
+class PositionForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs.update({'class': 'form-control-sm form-control'})
+        self.fields['description'].widget = forms.Textarea({'class': 'form-control'})
+        self.fields['availability'].widget.attrs.update({'class': 'form-control-sm form-control'})
+
+    class Meta:
+        model = Position
+        fields = ['title', 'description', 'availability']
+
+
 class ProjectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs.update({'class': 'form-control'})
         self.fields['url'].widget.attrs.update({'class': 'form-control'})
+        self.fields['description'].widget = forms.Textarea({'class': 'form-control'})
+        self.fields['timeline'].widget.attrs.update({'class': 'form-control'})
+        self.fields['applicant_requirements'].widget.attrs.update({'class': 'form-control'})
 
     class Meta:
         model = Project
-        fields = ['title', 'url']
+        fields = ['title', 'url', 'description', 'timeline', 'applicant_requirements']
 
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
