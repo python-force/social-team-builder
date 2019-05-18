@@ -185,7 +185,6 @@ class SkillInline(InlineFormSetFactory):
 class ProjectInline(InlineFormSetFactory):
     model = Project
     form_class = ProjectForm
-    fields = ['title', 'url']
     factory_kwargs = {'extra': 1, 'max_num': None,
                       'can_order': False, 'can_delete': True}
     prefix = 'project_formset'
@@ -359,6 +358,7 @@ class ApplyPositionView(RedirectView):
                 user=self.request.user,
                 position=position,
                 profile=position_profile,
+                status=0
             )
             if created:
                 messages.success(

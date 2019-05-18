@@ -125,11 +125,12 @@
                             <h5 class="card-title">{{ position_info_list.0.title }}</h5>
                             <p>{{ position_info_list.0.description|markdown }}</p>
                             <p>{{ position_info_list.0.availability|markdown }}</p>
+                            {{ position_info_list.1 }}
                             {% if position_info_list.1 == -1 %}
                             <a href="{% url 'apply-position' project.id position_id %}" class="btn-wide btn btn-success">Apply</a>
                             {% elif position_info_list.1 == 0 %}
                             <a class="btn-wide btn btn-light disabled">Apply</a>
-                            <a href="{% url 'apply-position' project.id position_id %}" class="btn-wide btn btn-danger">Cancel Apply?</a>
+                            <a href="{% url 'cancel-apply' project.id position_id %}" class="btn-wide btn btn-danger">Cancel Apply?</a>
                             {% elif position_info_list.1 == 1 %}
                             <a class="btn-wide btn btn-success disabled">Position Filled</a>
                             {% endif %}

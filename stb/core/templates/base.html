@@ -1,7 +1,7 @@
 {% load static %}
 
 <!doctype html>
-<html lang="en">
+<body lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -22,121 +22,151 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
-<link href="{% static 'ui/main.css' %}" rel="stylesheet"></head>
+<link href="{% static 'ui/main.css' %}" rel="stylesheet">
+</head>
 {% block addcss %}{% endblock %}
-<div>
-    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-        <div class="app-header header-shadow">
-            <div class="app-header__logo">
-                <div class="logo-src"></div>
-                <div class="header__pane ml-auto">
+<body>
+    <div>
+        <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+            <div class="app-header header-shadow">
+                <div class="app-header__logo">
+                    <div class="logo-src"></div>
+                    <div class="header__pane ml-auto">
+                        <div>
+                            <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
+                                <span class="hamburger-box">
+                                    <span class="hamburger-inner"></span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="app-header__mobile-menu">
                     <div>
-                        <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
+                        <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
                             <span class="hamburger-box">
                                 <span class="hamburger-inner"></span>
                             </span>
                         </button>
                     </div>
                 </div>
-            </div>
-            <div class="app-header__mobile-menu">
-                <div>
-                    <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                        <span class="hamburger-box">
-                            <span class="hamburger-inner"></span>
-                        </span>
-                    </button>
-                </div>
-            </div>
-            <div class="app-header__menu">
-                <span>
-                    <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
-                        <span class="btn-icon-wrapper">
-                            <i class="fa fa-ellipsis-v fa-w-6"></i>
-                        </span>
-                    </button>
-                </span>
-            </div>    <div class="app-header__content">
-                <div class="app-header-left">
-                    <div class="search-wrapper">
-                        <div class="input-holder">
-                            <form action="{% url 'index' %}" method="GET">
-                            <input type="text" name="q" class="search-input" placeholder="Type to search">
-                            <button class="search-icon" type="submit"><span></span></button>
-                            </form>
-                        </div>
+                <div class="app-header__menu">
+                    <span>
+                        <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
+                            <span class="btn-icon-wrapper">
+                                <i class="fa fa-ellipsis-v fa-w-6"></i>
+                            </span>
+                        </button>
+                    </span>
+                </div>    <div class="app-header__content">
+                    <div class="app-header-left">
+                        <div class="search-wrapper">
+                            <div class="input-holder">
+                                <form action="{% url 'index' %}" method="GET">
+                                <input type="text" name="q" class="search-input" placeholder="Type to search">
+                                <button class="search-icon" type="submit"><span></span></button>
+                                </form>
+                            </div>
 
-                        <button class="close"></button>
-                    </div>
-                    <ul class="header-menu nav">
-                        <li class="nav-item">
-                            <a href="{% url "index" %}" class="nav-link">
-                                <i class="nav-link-icon fa fa-database"> </i>
-                                Home
-                            </a>
-                        </li>
-                        <li class="btn-group nav-item">
-                            <a href="{% url "applications" %}" class="nav-link">
-                                <i class="nav-link-icon fa fa-edit"></i>
-                                Applications
-                            </a>
-                        </li>
-                        <li class="dropdown nav-item">
-                            {% if user.is_authenticated %}
-                            <a href="{% url "profile" user.users.id %}" class="nav-link">
-                                <i class="nav-link-icon fa fa-cog"></i>
-                                Profile
-                            </a>
-                            {% endif %}
-                        </li>
-                    </ul>
-                </div>
-                <div class="app-header-right">
-                    <div class="header-btn-lg pr-0">
-                        <div class="widget-content p-0">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left">
-                                    <div class="btn-group">
-                                        <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
-                                            <i class="fa fa-angle-down ml-2 opacity-8"></i>
-                                        </a>
-                                        {% if user.is_authenticated %}
-                                        <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                            <button onclick="window.location.href = '{% url "profile" user.users.id %}';" type="button" tabindex="0" class="dropdown-item">Profile</button>
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
+                            <button class="close"></button>
+                        </div>
+                        <ul class="header-menu nav">
+                            <li class="nav-item">
+                                <a href="{% url "index" %}" class="nav-link">
+                                    <i class="nav-link-icon fa fa-database"> </i>
+                                    Home
+                                </a>
+                            </li>
+                            <li class="btn-group nav-item">
+                                <a href="{% url "applications" %}" class="nav-link">
+                                    <i class="nav-link-icon fa fa-edit"></i>
+                                    Applications
+                                </a>
+                            </li>
+                            <li class="dropdown nav-item">
                                 {% if user.is_authenticated %}
-                                <div class="widget-content-left  ml-3 header-user-info">
-                                    <div class="widget-heading">
-                                        {{ user.users.full_name }}
-                                    </div>
-                                    <div class="widget-subheading">
-                                        {{ user.username }}
-                                    </div>
-                                </div>
-                                <div class="widget-content-right header-user-info ml-3">
-                                    <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example">
-                                        <i class="fa text-white fa-calendar pr-1 pl-1"></i>
-                                    </button>
-                                </div>
-                                {% else %}
-                                <a href="{% url 'signup' %}">Sign Up</a></li>
-                                <a href="{% url 'login' %}">Sign In</a></li>
+                                <a href="{% url "profile" user.users.id %}" class="nav-link">
+                                    <i class="nav-link-icon fa fa-cog"></i>
+                                    Profile
+                                </a>
                                 {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="app-header-right">
+                        <div class="header-btn-lg pr-0">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-wrapper">
+                                    <div class="widget-content-left">
+                                        <div class="btn-group">
+                                            <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
+                                                <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
+                                                <i class="fa fa-angle-down ml-2 opacity-8"></i>
+                                            </a>
+                                            {% if user.is_authenticated %}
+                                            <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
+                                                <button onclick="window.location.href = '{% url "profile" user.users.id %}';" type="button" tabindex="0" class="dropdown-item">Profile</button>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% if user.is_authenticated %}
+                                    <div class="widget-content-left  ml-3 header-user-info">
+                                        <div class="widget-heading">
+                                            {{ user.users.full_name }}
+                                        </div>
+                                        <div class="widget-subheading">
+                                            {{ user.username }}
+                                        </div>
+                                    </div>
+                                    <div class="widget-content-right header-user-info ml-3">
+                                        <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example">
+                                            <i class="fa text-white fa-calendar pr-1 pl-1"></i>
+                                        </button>
+                                    </div>
+                                    {% else %}
+                                    <a href="{% url 'signup' %}">Sign Up</a></li>
+                                    <a href="{% url 'login' %}">Sign In</a></li>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!--
+            {% if messages %}
+            <div class="row" style="padding-top: 60px;">
+                <div class="col-md-12">
+                    <div class="alert alert-primary fade show" role="alert" style="margin-bottom: 0rem;">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            -->
+            {% block content %}{% endblock %}
         </div>
-        {% block content %}{% endblock %}
     </div>
-</div>
-<script type="text/javascript" src="{% static 'ui/assets/scripts/main.js' %}"></script></body>
-{% block js %}{% endblock %}
+
+    <script type="text/javascript" src="{% static 'ui/assets/scripts/main.js' %}"></script></body>
+
+    {% block js %}{% endblock %}
+    <div id="toast-container" class="toast-bottom-center">
+        <div class="toast toast-info" aria-live="polite" style="">
+            <div class="toast-progress"></div>
+            <button type="button" class="toast-close-button" role="button">×</button>
+            <div class="toast-title">Info</div>
+            <div class="toast-message">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
 </html>
 
 
