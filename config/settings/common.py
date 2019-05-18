@@ -288,3 +288,5 @@ MARKDOWN_DEUX_STYLES = {
         "safe_mode": "escape",
     },
 }
+
+LOGOUT_REDIRECT_URL = 'http://stbuilder.pythonforce.com/'
