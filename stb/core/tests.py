@@ -506,7 +506,7 @@ class EntireAppTest(TestCase):
             data={},
         )
         for key, value in response.context[-1]['applicant_dict'].items():
-            self.assertEqual(key, 6)
+            self.assertEqual(key, 8)
             self.assertEqual(value[0].username, 'johnconnor')
             self.assertEqual(value[1].title, 'SPACE X')
             self.assertEqual(value[2].title, 'Rails Developer')

@@ -22,7 +22,7 @@ class SignUp(CreateView):
     template_name = "registration/signup.html"
 
 class LogoutView(RedirectView):
-    url = reverse_lazy('index')
+    url = reverse_lazy('login')
 
     def get(self, request, *args, **kwargs):
         logout(request)
@@ -357,7 +357,6 @@ class ApplyPositionView(RedirectView):
                 user=self.request.user,
                 position=position,
                 profile=position_profile,
-                status=0
             )
             if created:
                 messages.success(
