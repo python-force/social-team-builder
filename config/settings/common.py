@@ -289,4 +289,4 @@ MARKDOWN_DEUX_STYLES = {
     },
 }
 
-LOGOUT_REDIRECT_URL = 'http://stbuilder.pythonforce.com/'
+LOGOUT_REDIRECT_URL = '/'

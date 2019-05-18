@@ -1,7 +1,7 @@
 {% load static %}
 
-<!doctype html>
-<body lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -23,6 +23,12 @@
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
 <link href="{% static 'ui/main.css' %}" rel="stylesheet">
+<style>
+    .search-wrapper.active+.header-menu {
+    opacity: 1;
+    }
+</style>
+
 </head>
 {% block addcss %}{% endblock %}
 <body>
@@ -61,16 +67,26 @@
                     </span>
                 </div>    <div class="app-header__content">
                     <div class="app-header-left">
-                        <div class="search-wrapper">
+                        <div class="search-wrapper active">
                             <div class="input-holder">
                                 <form action="{% url 'index' %}" method="GET">
                                 <input type="text" name="q" class="search-input" placeholder="Type to search">
                                 <button class="search-icon" type="submit"><span></span></button>
                                 </form>
                             </div>
+                        </div>
+                        <!--
+                        <div class="search-wrapper">
+                            <div class="input-holder">
+
+                                <input type="text" name="q" class="search-input" placeholder="Type to search">
+                                <button class="search-icon" type="submit"><span></span></button>
+
+                            </div>
 
                             <button class="close"></button>
                         </div>
+                        -->
                         <ul class="header-menu nav">
                             <li class="nav-item">
                                 <a href="{% url "index" %}" class="nav-link">
