@@ -49,21 +49,6 @@
         <div class="scrollbar-sidebar">
             <div class="app-sidebar__inner">
                 <img style="width: 100%; margin-top: 20px;" src="{{ MEDIA_URL }}{{ profile.avatar }}" alt="{{ profile.full.name }} profile picture">
-                <ul class="vertical-nav-menu">
-                    <li class="app-sidebar__heading">My Skills</li>
-                    {% for skill in skills %}
-                    <li>{{ skill.title }}</li>
-                    {% endfor %}
-                </ul>
-                {{ profile.other_skills }}
-                <ul class="vertical-nav-menu">
-                    <li class="app-sidebar__heading">My Projects</li>
-                    {% for project in projects %}
-                        <li>
-                          <a href="{% url 'project' project.id %}"><i class="metismenu-icon pe-7s-rocket"></i>{{ project.title }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
             </div>
         </div>
     </div>
@@ -83,9 +68,9 @@
                         </div>
                     </div>
                     <div class="page-title-actions">
-                        <button onclick="window.location.href = '{% url "profile-edit" profile.id %}';" type="button" data-placement="bottom" class="mr-3 btn btn-success">
+                        <button type="submit" value="Submit" class="mb-2 mr-2 btn btn-success">
                             <i class="fa fa-business-time fa-w-20"></i>
-                            Edit Profile
+                            Save Profile
                         </button>
                     </div>
                 </div>
@@ -117,7 +102,10 @@
 
 
                                 </div>
-                             <input type="submit" value="Submit" />
+                            <button type="submit" value="Submit" class="mb-2 mr-2 btn btn-success">
+                                <i class="fa fa-business-time fa-w-20"></i>
+                                Save Profile
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -137,7 +125,10 @@
                                   {% endfor %}
                                   </ul>
                                 </div>
-                             <input type="submit" value="Submit" />
+                             <button type="submit" value="Submit" class="mb-2 mr-2 btn btn-success">
+                                <i class="fa fa-business-time fa-w-20"></i>
+                                Save Profile
+                            </button>
                         </div>
                     </div>
                 </div>

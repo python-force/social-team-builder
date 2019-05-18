@@ -246,7 +246,6 @@ class ProjectUpdateView(UpdateWithInlinesView):
     model = Project
     form_class = ProjectForm
     inlines = [PositionInline]
-    # fields = ['title', 'description', 'timeline', 'applicant_requirements']
     template_name = 'project_edit.html'
 
     def get_object(self, queryset=None):
