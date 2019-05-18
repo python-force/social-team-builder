@@ -44,8 +44,15 @@
                     <li class="app-sidebar__heading">My Projects</li>
                     {% for project in projects %}
                         <li>
-                          <a href="{% url 'project' project.id %}"><i class="metismenu-icon pe-7s-rocket"></i>{{ project.title }}</a>
+                          <a href="{% url 'project' project.id %}" style="padding: 0px; line-height: 15px; height: 15px;">
+                              {{ project.title }}
+                          </a>
                         </li>
+                    {% endfor %}
+                    <li class="app-sidebar__heading">Projects involved with</li>
+                    {% for project in approved_projects %}
+                        {{ project.position.project.title }}
+                        {{ project.position.title }}
                     {% endfor %}
                 </ul>
             </div>
