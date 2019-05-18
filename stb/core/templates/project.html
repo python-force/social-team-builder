@@ -62,12 +62,14 @@
                             </div>
                         </div>
                     </div>
+                    {% if app_profile.id ==  user_profile.id %}
                     <div class="page-title-actions">
                         <button onclick="window.location.href = '{% url "project-edit" project.id %}';" type="button" data-placement="bottom" class="mr-3 btn btn-success">
                             <i class="fa fa-business-time fa-w-20"></i>
                             Edit Project
                         </button>
                     </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="row">
