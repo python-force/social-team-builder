@@ -41,13 +41,6 @@
             <div class="app-sidebar__inner">
                 <img style="width: 100%; margin-top: 20px;" src="{{ MEDIA_URL }}{{ profile.avatar }}" alt="{{ profile.full.name }} profile picture">
                 <ul class="vertical-nav-menu">
-                    <li class="app-sidebar__heading">My Skills</li>
-                    {% for skill in skills %}
-                    <li>{{ skill.title }}</li>
-                    {% endfor %}
-                </ul>
-                {{ profile.other_skills }}
-                <ul class="vertical-nav-menu">
                     <li class="app-sidebar__heading">My Projects</li>
                     {% for project in projects %}
                         <li>
@@ -89,7 +82,12 @@
                                 <div class="card-body">
                                     {{ profile.description|markdown }}
                                 </div>
-                                <div class="card-footer">Skills: </div>
+                                <div class="card-footer">
+                                    Skills: {% for skill in skills %}{{ skill.title }}, {% endfor %}{{ profile.other_skills }}
+                                </div>
+                                <div class="card-footer">
+                                    Other Skills: {{ profile.other_skills }}
+                                </div>
                             </div>
                         </div>
                     </div>
