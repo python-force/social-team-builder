@@ -8,6 +8,9 @@
         list-style: none;
         padding-inline-start: 0px;
     }
+    #id_avatar {
+        margin-bottom: 20px;
+    }
 </style>
 
 {% endblock %}
@@ -306,14 +309,15 @@
 <script>
   $(document).ready(function() {
     $('select').addClass('form-control-sm form-control');
+    $("#id_avatar").after("<br>");
     $('.inline-skills').formset({
         prefix: '{{ inlines.0.prefix }}',
-        addText: 'add link',
+        addText: 'add skill',
         deleteText: 'remove'
     });
     $('.inline-projects').formset({
         prefix: '{{ inlines.1.prefix }}',
-        addText: 'add link',
+        addText: 'add project',
         deleteText: 'remove'
     });
   });

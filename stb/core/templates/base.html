@@ -107,6 +107,7 @@
                                             {% if user.is_authenticated %}
                                             <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
                                                 <button onclick="window.location.href = '{% url "profile" user.users.id %}';" type="button" tabindex="0" class="dropdown-item">Profile</button>
+                                                <button onclick="window.location.href = '{% url "logout" %}';" type="button" tabindex="0" class="dropdown-item">Logout</button>
                                             </div>
                                             {% endif %}
                                         </div>
