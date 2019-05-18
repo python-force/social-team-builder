@@ -493,7 +493,7 @@ class EntireAppTest(TestCase):
             self.assertEqual(value[0].username, 'johnconnor')
             self.assertEqual(value[1].title, 'SPACE X')
             self.assertEqual(value[2].title, 'Rails Developer')
-            self.assertEqual(value[3], None)
+            self.assertEqual(value[3], 0)
         self.assertEqual(response.status_code, 200)
 
     def test_applications_list_status_view(self):
@@ -510,7 +510,7 @@ class EntireAppTest(TestCase):
             self.assertEqual(value[0].username, 'johnconnor')
             self.assertEqual(value[1].title, 'SPACE X')
             self.assertEqual(value[2].title, 'Rails Developer')
-            self.assertEqual(value[3], None)
+            self.assertEqual(value[3], 0)
         self.assertEqual(response.status_code, 200)
 
     def test_applications_list_project_view(self):
@@ -527,7 +527,7 @@ class EntireAppTest(TestCase):
             self.assertEqual(value[0].username, 'johnconnor')
             self.assertEqual(value[1].title, 'SPACE X')
             self.assertEqual(value[2].title, 'Rails Developer')
-            self.assertEqual(value[3], None)
+            self.assertEqual(value[3], 0)
         self.assertEqual(response.status_code, 200)
 
     def test_applications_list_project_0_view(self):
@@ -556,5 +556,5 @@ class EntireAppTest(TestCase):
             self.assertEqual(value[0].username, 'johnconnor')
             self.assertEqual(value[1].title, 'SPACE X')
             self.assertEqual(value[2].title, 'Rails Developer')
-            self.assertEqual(value[3], None)
+            self.assertEqual(value[3], 0)
         self.assertEqual(response.status_code, 200)

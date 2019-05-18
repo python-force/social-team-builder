@@ -353,17 +353,12 @@ class ApplyPositionView(RedirectView):
         position_profile = get_object_or_404(Profile, id=position.project.profile_id)
 
         if position.project.profile.user != self.request.user:
-            obj, created = Position_Application.objects.get_or_create(
-                user=self.request.user,
-                position=position,
-                profile=position_profile,
-            )
-            if created:
-                messages.success(
-                    self.request,
-                    "You have now applied for {}.".format(position.title)
+            try:
+                obj = Position_Application.objects.get(
+                    user=self.request.user,
+                    position=position,
+                    profile=position_profile,
                 )
-            else:
                 if obj.status == 1:
                     messages.success(
                         self.request,
@@ -381,6 +376,18 @@ class ApplyPositionView(RedirectView):
                          "position").format(
                             position.title
                         )
+                    )
+            except:
+                created = Position_Application.objects.create(
+                    user=self.request.user,
+                    position=position,
+                    profile=position_profile,
+                    status=0
+                )
+                if created:
+                    messages.success(
+                        self.request,
+                        "You have now applied for {}.".format(position.title)
                     )
         else:
             messages.warning(
