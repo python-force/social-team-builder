@@ -135,6 +135,8 @@
                             <a href="{% url 'cancel-apply' project.id position_id %}" class="btn-wide btn btn-danger">Cancel Apply?</a>
                             {% elif position_info_list.1 == 1 %}
                             <a class="btn-wide btn btn-success disabled">Position Filled</a>
+                            {% elif position_info_list.1 == 2 %}
+                            <a class="btn-wide btn btn-danger disabled" style="color: white;">You have been rejected</a>
                             {% endif %}
                         </div>
                     </div>
