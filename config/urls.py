@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 
 from django.contrib.auth.decorators import login_required
 
-from stb.core.views import (Homepage, SignUp, LogoutView, ProfileView,
+from stb.core.views import (Homepage, SignUp, LoginView, LogoutView, ProfileView,
                             ProfileUpdateView, ProjectView, CreateProjectView,
                             ProjectUpdateView, Applications, ProjectNeedsView,
                             ApplyPositionView, CancelApplyView, AcceptProjectProfileView,
@@ -45,6 +45,7 @@ urlpatterns = [
     path('applications/position/<int:position>/', Applications.as_view(), name='applications-position'),
     path('admin/', admin.site.urls),
     path('logout/', LogoutView.as_view(), name='logout-user'),
+    # path('login/', LoginView.as_view(), name='login'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', SignUp.as_view(), name='signup'),
     path('markdownx/', include('markdownx.urls')),

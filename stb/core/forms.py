@@ -7,14 +7,29 @@ from django import forms
 # ProfileFormSet = inlineformset_factory(Profile, Skill, fields = ['profile', 'title'], can_delete = True)
 
 class UserCreateForm(UserCreationForm):
-    class Meta:
-        fields = ('username', 'email', 'password1', 'password2')
-        model = User
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["username"].label = "What would be your username?"
         self.fields["email"].label = "What would be your email address?"
+        self.fields["username"].widget.attrs.update({'class': 'form-control-sm form-control'})
+        self.fields["email"].widget.attrs.update({'class': 'form-control-sm form-control'})
+        self.fields["password1"].widget.attrs.update({'class': 'form-control-sm form-control'})
+        self.fields["password2"].widget.attrs.update({'class': 'form-control-sm form-control'})
+
+    class Meta:
+        fields = ('username', 'email', 'password1', 'password2')
+        model = User
+
+
+class UserLoginForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs.update({'class': 'form-control-sm form-control'})
+        self.fields["password"].widget.attrs.update({'class': 'form-control-sm form-control'})
+
+    class Meta:
+        fields = ('username', 'password')
+        model = User
 
 
 class SkillForm(forms.ModelForm):

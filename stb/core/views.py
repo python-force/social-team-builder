@@ -4,7 +4,6 @@ from django.contrib.auth import logout
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.models import User
 from stb.core.models import Profile, Skill, Project, Position, Position_Application
-from stb.core.forms import UserCreateForm
 from django.http import Http404
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSetFactory
 from django.shortcuts import get_object_or_404, get_list_or_404
@@ -14,12 +13,19 @@ import collections
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.forms.formsets import all_valid
-from stb.core.forms import ProfileForm, SkillForm, ProjectForm, PositionForm
+from stb.core.forms import UserCreateForm, UserLoginForm, ProfileForm, SkillForm, ProjectForm, PositionForm
 
 class SignUp(CreateView):
     form_class = UserCreateForm
     success_url = reverse_lazy('login')
     template_name = "registration/signup.html"
+
+
+class LoginView(CreateView):
+    form_class = UserLoginForm
+    success_url = reverse_lazy('index')
+    template_name = "registration/login.html"
+
 
 class LogoutView(RedirectView):
     url = reverse_lazy('login')

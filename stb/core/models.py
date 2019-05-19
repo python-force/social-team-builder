@@ -23,9 +23,14 @@ class Profile(models.Model):
 class Skill(models.Model):
     profile = models.ManyToManyField(Profile, related_name='skills', blank=True)
     title = models.CharField(max_length=100, blank=True)
+    title_position = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.title_position
+
+    def save(self, *args, **kwargs):
+        self.title_position = self.title.title() + ' Developer'
+        super().save(*args, **kwargs)
 
 
 class Project(models.Model):
@@ -53,7 +58,7 @@ class Position(models.Model):
         if self.title.title == '':
             return 'Please Specify Position Name'
         else:
-            return self.title.title
+            return self.title.title_position
 
 
 class Position_Application(models.Model):
