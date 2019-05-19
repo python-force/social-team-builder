@@ -37,7 +37,7 @@
                 </button>
             </span>
         </div>
-        <div class="scrollbar-sidebar">
+        <div class="scrollbar-sidebar ps ps--active-y">
             <div class="app-sidebar__inner">
                 <img style="width: 100%; margin-top: 20px;" src="{{ MEDIA_URL }}{{ profile.avatar }}" alt="{{ profile.full.name }} profile picture">
                 <ul class="vertical-nav-menu">
@@ -56,12 +56,9 @@
                         {{ project.position.title }}
                     </a>
                     {% endfor %}
-                    <li class="app-sidebar__heading">Project to Apply To</li>
-                    {% for position in jobs_can_apply_to %}
-                    <a href="{% url 'project' position.project.id %}" style="padding: 0px; line-height: 15px; height: 15px; font-size: 10px;">
-                        {{ position.project.title }} / {{ position }}<br>
-                    </a>
-                    {% endfor %}
+                    <li class="app-sidebar__heading">Projects to Apply To</li>
+                    <a href="#projects-to-apply-to">Show Me</a>
+
                 </ul>
             </div>
         </div>
@@ -105,6 +102,46 @@
                                 <div class="card-footer">
                                     Other Skills: {{ profile.other_skills }}
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content" id="projects-to-apply-to">
+                <div class="tab-pane tabs-animation fade active show" id="tab-content-1" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3 card text-black main-card">
+                                <h3 style="padding: 30px;">PROJECTS TO APPLY TO</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane tabs-animation fade active show" id="tab-content-1" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="accordion" class="accordion-wrapper">
+                                {% for position in jobs_can_apply_to %}
+                                <div class="card">
+                                    <div id="headingOne" class="card-header">
+                                        <button type="button" data-toggle="collapse" data-target="#collapseOne1" aria-expanded="false" aria-controls="collapseOne" class="text-left m-0 p-0 btn btn-link btn-block collapsed">
+                                            <h5 class="m-0 p-0">{{ position.project.title }}</h5>
+                                            {{ position }} / {{ position }}<br>
+                                        </button>
+                                    </div>
+                                    <div data-parent="#accordion" id="collapseOne1" aria-labelledby="headingOne" class="collapse" style="">
+                                        <div class="card-body">
+                                            <a href="{% url 'project' position.project.id %}" class="m-20 p-20">
+                                                Go to project > {{ position.project.title }} / {{ position }}<br>
+                                            </a>
+                                            <h4>{{ position.project.title }} / {{ position }} Position - Description:</h4>
+                                            {{ position.project.description }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
