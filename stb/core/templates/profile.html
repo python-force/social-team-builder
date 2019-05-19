@@ -51,8 +51,10 @@
                     {% endfor %}
                     <li class="app-sidebar__heading">Projects involved with</li>
                     {% for project in approved_projects %}
-                        {{ project.position.project.title }}
+                    <a href="{% url 'project' project.position.project.id %}" style="padding: 0px; line-height: 15px; height: 15px;">
+                        {{ project.position.project.title }} /
                         {{ project.position.title }}
+                    </a>
                     {% endfor %}
                 </ul>
             </div>
