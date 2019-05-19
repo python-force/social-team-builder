@@ -94,6 +94,7 @@
                                     Home
                                 </a>
                             </li>
+                            {% if user.is_authenticated %}
                             <li class="btn-group nav-item">
                                 <a href="{% url "applications" %}" class="nav-link">
                                     <i class="nav-link-icon fa fa-edit"></i>
@@ -101,13 +102,13 @@
                                 </a>
                             </li>
                             <li class="dropdown nav-item">
-                                {% if user.is_authenticated %}
+
                                 <a href="{% url "profile" user.users.id %}" class="nav-link">
                                     <i class="nav-link-icon fa fa-cog"></i>
                                     Profile
                                 </a>
-                                {% endif %}
                             </li>
+                            {% endif %}
                         </ul>
                     </div>
                     <div class="app-header-right">
