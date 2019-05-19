@@ -207,13 +207,13 @@ class ProfileView(TemplateView):
         context['skills'] = context['profile'].skills.all()
         context['projects'] = context['profile'].projects.all()
         context['approved_projects'] = Position_Application.objects.filter(user_id=context['profile'].user.id, status=1)
-        positions = Position.objects.all()
         context['jobs_can_apply_to'] = []
-
-        for skill in context['skills']:
-            list = positions.filter(title_id=skill.id)
-            for item in list:
-                context['jobs_can_apply_to'].append(item)
+        not_my_projects = Project.objects.exclude(profile=context['profile']).prefetch_related()
+        for project in not_my_projects:
+            for position in project.positions.all():
+                for skill in context['skills']:
+                    if position.title_id == skill.id:
+                        context['jobs_can_apply_to'].append(position)
         return context
 
 
