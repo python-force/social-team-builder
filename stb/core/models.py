@@ -50,7 +50,10 @@ class Position(models.Model):
     availability = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return self.title.title
+        if self.title.title == '':
+            return 'Please Specify Position Name'
+        else:
+            return self.title.title
 
 
 class Position_Application(models.Model):
