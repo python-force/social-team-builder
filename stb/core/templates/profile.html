@@ -126,12 +126,12 @@
                                 {% for position in jobs_can_apply_to %}
                                 <div class="card">
                                     <div id="headingOne" class="card-header">
-                                        <button type="button" data-toggle="collapse" data-target="#collapseOne1" aria-expanded="false" aria-controls="collapseOne" class="text-left m-0 p-0 btn btn-link btn-block collapsed">
+                                        <button type="button" data-toggle="collapse" data-target="#collapseOne{{ position.id }}" aria-expanded="false" aria-controls="collapseOne" class="text-left m-0 p-0 btn btn-link btn-block collapsed">
                                             <h5 class="m-0 p-0">{{ position.project.title }}</h5>
                                             {{ position }} / {{ position }}<br>
                                         </button>
                                     </div>
-                                    <div data-parent="#accordion" id="collapseOne1" aria-labelledby="headingOne" class="collapse" style="">
+                                    <div data-parent="#accordion" id="collapseOne{{ position.id }}" aria-labelledby="headingOne" class="collapse" style="">
                                         <div class="card-body">
                                             <a href="{% url 'project' position.project.id %}" class="m-20 p-20">
                                                 Go to project > {{ position.project.title }} / {{ position }}<br>
