@@ -45,12 +45,12 @@ class Project(models.Model):
 
 class Position(models.Model):
     project = models.ForeignKey(Project, related_name='positions', on_delete=models.CASCADE)
-    title = models.CharField(max_length=100, blank=True)
+    title = models.ForeignKey(Skill, on_delete=models.CASCADE, blank=True, null=True)
     description = MarkdownxField(blank=True)
     availability = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.title.title
 
 
 class Position_Application(models.Model):

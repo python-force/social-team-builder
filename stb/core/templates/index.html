@@ -49,7 +49,7 @@
                     <li>
                         <a href="{% url 'project-needs' position.id %}">
                             <i class="metismenu-icon pe-7s-rocket"></i>
-                            {{ position }}
+                            {{ position|title }} Developer
                         </a>
                     </li>
                     {% endfor %}
@@ -115,7 +115,7 @@
                                     </td>
                                     <td class="text-center">
                                         {% for position in project.positions.all %}
-                                            {{ position }}{% if forloop.last %}{% else %}, {% endif %}
+                                            {{ position|title }} Developer {% if forloop.last %}{% else %}, {% endif %}
                                         {% endfor %}
                                     </td>
                                     <td class="text-center">

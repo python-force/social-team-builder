@@ -340,7 +340,6 @@ class ProjectView(TemplateView):
             """
 
         context['positions'] = applied
-        print(context['positions'])
         return context
 
 class ApplyPositionView(RedirectView):

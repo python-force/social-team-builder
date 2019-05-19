@@ -41,9 +41,7 @@
             <div class="app-sidebar__inner">
                 <ul class="vertical-nav-menu">
                     <li class="app-sidebar__heading">Project Needs</li>
-                    {% for position_id, position_info_list in positions.items %}
-                        <li>{{ position_info_list.0.title }}</li>
-                    {% endfor %}
+
                 </ul>
             </div>
         </div>
@@ -183,72 +181,5 @@
         </div>
     </div>
 </div>
-
-  <div class="circle--actions--bar">
-    <div class="bounds">
-      <div class="grid-100">
-        <a class="button" href="{% url 'project-edit' project.id %}">Edit Project</a>
-        <a class="button button-text" href="{% url 'project-delete' project.id %}">Delete Project</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="bounds circle--page circle--article">
-    <div class="grid-70">
-      <div class="circle--article--header">
-        <h4 class="circle--article--section">Project</h4>
-        <h1 class="circle--article--title">{{ project.title }}</h1>
-        <p class="circle--article--byline">Project Owner: <a>{{ app_profile.full_name }}</a></p>
-      </div>
-
-      <div class="circle--article--body">
-        {{ project.description|markdown }}
-      </div>
-
-      <div class="circle--project--positions">
-        <h2>Positions</h2>
-        <ul class="circle--group--list">
-          {% for position_id, position_info_list in positions.items %}
-          <li>
-            <h3>{{ position_info_list.0.title }}</h3>
-            <p>{{ position_info_list.0.description|markdown }}</p>
-            <p>{{ position_info_list.0.availability|markdown }}</p>
-            {% if position_info_list.1 == -1 %}
-            <a class="button button-primary" href="{% url 'apply-position' project.id position_id %}">Apply</a>
-            {% elif position_info_list.1 == 0 %}
-            <a class="button button-primary button-inactive">Applied</a>
-            <a class="button button-primary" href="{% url 'cancel-apply' project.id position_id %}">Cancel Apply?</a>
-            {% elif position_info_list.1 == 1 %}
-            <a class="button button-primary button-inactive">Position Filled</a>
-            {% endif %}
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-
-    </div>
-
-    <div class="grid-25 grid-push-5">
-      <div class="circle--secondary--module">
-        <h3>Project Needs</h3>
-        <ul class="circle--link--list">
-          {% for position_id, position_info_list in positions.items %}
-          <li><a href="{% url 'project-needs' position_id %}">{{ position.title }}</a></li>
-          {% endfor %}
-        </ul>
-      </div>
-
-      <div class="circle--secondary--module">
-        <h3>Project Timeline</h3>
-        <p>{{ project.timeline }}</p>
-      </div>
-
-      <div class="circle--secondary--module">
-        <h3>Applicant Requirements</h3>
-        <p>{{ project.applicant_requirements }}</p>
-      </div>
-
-    </div>
-  </div>
 
 {% endblock %}
