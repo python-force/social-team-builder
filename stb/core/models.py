@@ -50,7 +50,7 @@ class Project(models.Model):
 
 class Position(models.Model):
     project = models.ForeignKey(Project, related_name='positions', on_delete=models.CASCADE)
-    title = models.ForeignKey(Skill, on_delete=models.CASCADE, blank=True, null=True)
+    title = models.ForeignKey(Skill, related_name='skills', on_delete=models.CASCADE, blank=True, null=True)
     description = MarkdownxField(blank=True)
     availability = models.CharField(max_length=255, blank=True)
 
