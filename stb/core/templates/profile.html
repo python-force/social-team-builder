@@ -56,7 +56,7 @@
                         {{ project.position.title }}
                     </a>
                     {% endfor %}
-                    <li class="app-sidebar__heading">Projects involved with</li>
+                    <li class="app-sidebar__heading">Project to Apply To</li>
                     {% for position in jobs_can_apply_to %}
                     <a href="{% url 'project' position.project.id %}" style="padding: 0px; line-height: 15px; height: 15px; font-size: 10px;">
                         {{ position.project.title }} / {{ position }}<br>
