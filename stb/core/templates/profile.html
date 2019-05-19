@@ -44,14 +44,14 @@
                     <li class="app-sidebar__heading">My Projects</li>
                     {% for project in projects %}
                         <li>
-                          <a href="{% url 'project' project.id %}" style="padding: 0px; line-height: 15px; height: 15px;">
+                          <a href="{% url 'project' project.id %}" style="padding: 0px; line-height: 15px; height: 15px; font-size: 10px;">
                               {{ project.title }}
                           </a>
                         </li>
                     {% endfor %}
                     <li class="app-sidebar__heading">Projects involved with</li>
                     {% for project in approved_projects %}
-                    <a href="{% url 'project' project.position.project.id %}" style="padding: 0px; line-height: 15px; height: 15px;">
+                    <a href="{% url 'project' project.position.project.id %}" style="padding: 0px; line-height: 15px; height: 15px; font-size: 10px;">
                         {{ project.position.project.title }} /
                         {{ project.position.title }}
                     </a>
