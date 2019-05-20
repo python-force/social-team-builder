@@ -1,6 +1,6 @@
 # Social Team Builder
 
-![Alt text](/path/to/img.jpg "Optional title")
+![Social Team Builder](https://stbuilder.s3.amazonaws.com/static/screenshots/stb1.png "Social Team Builder")
 
 ## Installation
 
@@ -64,7 +64,24 @@ You're going to build a site where people can sign up to find projects that need
 - As a user of the site, I should be able to approve or deny applicants directly from the list of applicants.
 - As a user of the site, I should be given a list of projects that need my skill set.
 
-![Alt text](/path/to/img.jpg "Optional title")
-![Alt text](/path/to/img.jpg "Optional title")
-![Alt text](/path/to/img.jpg "Optional title")
+### Profile
+![Social Team Builder Profile](https://stbuilder.s3.amazonaws.com/static/screenshots/stb2.png "Social Team Builder Profile")
 
+### Applications
+
+![Social Team Apps](https://stbuilder.s3.amazonaws.com/static/screenshots/stb3.png "Social Team Builder Apps")
+
+### Profile Projects Available
+
+![Social Team Builder](https://stbuilder.s3.amazonaws.com/static/screenshots/stb4.png "Social Team Builder")
+
+![Social Team Builder](https://stbuilder.s3.amazonaws.com/static/screenshots/stb5.png "Social Team Builder")
+
+### Template
+
+https://github.com/DashboardPack/architectui-html-theme-free
+
+ArchitectUI Dashboard Free is lightweight and comes packed with the minimal set of components to get you started. If you have a simple application, it’s the perfect solution for you. It’s built on top of Bootstrap 4.2.1 and features a scalable architecture just like it’s wiser, older sibling – ArchitectUI HTML Pro theme. 
+
+Available to Download here:
+https://dashboardpack.com/theme-details/architectui-html-dashboard-free/
