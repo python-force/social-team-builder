@@ -184,64 +184,6 @@
 </div>
 </form>
 
-
-
-  <div class="circle--actions--bar">
-    <div class="bounds">
-      <div class="grid-100">
-        <input type="submit" value="Submit" />
-        <a class="button button-text" href="{% url 'project-delete' project.id %}">Delete Project</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="bounds circle--page circle--article">
-    <div class="grid-70">
-      <div class="circle--article--body">
-        {% for field in form %}
-        {% if field.label == "Title" or field.label == "Description" %}
-          <div class="fieldWrapper">
-          {{ field.errors }}
-          {{ field.label_tag }} {{ field }}
-          {% if field.help_text %}
-          <p class="help">{{ field.help_text|safe }}</p>
-          {% endif %}
-          </div>
-        {% endif %}
-        {% endfor %}
-      </div>
-
-      <div class="circle--project--positions">
-        <h2>Positions</h2>
-
-        <ul class="circle--group--list circle--clone--list">
-          {{ inlines.0.management_form}}
-          {% for formset in inlines.0 %}
-          <li class="inline-position">
-            {{ formset }}
-          </li>
-          {% endfor %}
-        </ul>
-        <!-- <a class="button button-primary" href="project.html">Save Changes</a> -->
-      </div>
-    </div>
-
-    <div class="grid-25 grid-push-5">
-      {% for field in form %}
-        {% if field.label == "Timeline" or field.label == "Applicant requirements" %}
-          <div class="circle--secondary--module">
-          {{ field.errors }}
-          {{ field.label_tag }} {{ field }}
-          {% if field.help_text %}
-          <p class="help">{{ field.help_text|safe }}</p>
-          </div>
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-    </div>
-  </div>
-
-
 {% endblock %}
 
 {% block js %}
