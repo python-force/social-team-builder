@@ -183,7 +183,7 @@ class SkillInline(InlineFormSetFactory):
     model = Skill
     form_class = SkillForm
     inlines = [ProfileSkillInline]
-    factory_kwargs = {'extra': 1, 'max_num': None,
+    factory_kwargs = {'extra': 0, 'max_num': None,
                       'can_order': False, 'can_delete': True}
     prefix = 'skill_formset'
 
@@ -191,7 +191,7 @@ class SkillInline(InlineFormSetFactory):
 class ProjectInline(InlineFormSetFactory):
     model = Project
     form_class = ProjectForm
-    factory_kwargs = {'extra': 1, 'max_num': None,
+    factory_kwargs = {'extra': 0, 'max_num': None,
                       'can_order': False, 'can_delete': True}
     prefix = 'project_formset'
 
@@ -234,7 +234,7 @@ class PositionInline(InlineFormSetFactory):
     model = Position
     form_class = PositionForm
     initial = [{'title': 'Enter Position', 'availability': 'Availability for Applicant'}]
-    factory_kwargs = {'extra': 1, 'max_num': None,
+    factory_kwargs = {'extra': 0, 'max_num': None,
                       'can_order': False, 'can_delete': True}
     prefix = 'position_formset'
 
