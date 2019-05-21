@@ -27,7 +27,11 @@ MANAGERS = ADMINS
 
 # COMPRESS_ENABLED=False
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL CONFIGURATION
+# ------------------------------------------------------------------------------
+EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='sendgrid_backend.SendgridBackend')
+SENDGRID_API_KEY = env('SENDGRID_API_KEY')
+SENDGRID_SANDBOX_MODE_IN_DEBUG = False
 
 # DEFAULT_FILE_STORAGE = 'config.custom_storages.OverwriteStorage'
 MEDIAFILES_LOCATION = 'media'
