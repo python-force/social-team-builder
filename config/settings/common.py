@@ -27,11 +27,29 @@ environ.Env.read_env(str(ROOT_DIR.path('.env'))) # reading .env file
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = env('DJANGO_SECRET_KEY')
 
+# EMAIL CONFIGURATION
+# ------------------------------------------------------------------------------
+EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='sendgrid_backend.SendgridBackend')
+SENDGRID_API_KEY = env('SENDGRID_API_KEY')
+
+# MANAGER CONFIGURATION
+# ------------------------------------------------------------------------------
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
+ADMINS = (
+    ('Radek Valachovic', 'studio@pythonforce.com'),
+)
+MANAGERS = (
+    ('Python Force', 'studio@pythonforce.com'),
+)
+
+SERVER_EMAIL = "studio@pythonforce.com"
+
 # Application definition
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
     # Default Django apps:
+    'registration',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -290,3 +308,5 @@ MARKDOWN_DEUX_STYLES = {
 }
 
 LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
+REGISTRATION_AUTO_LOGIN = True # Automatically log the user in.

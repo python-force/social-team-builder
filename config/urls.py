@@ -46,7 +46,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout/', LogoutView.as_view(), name='logout-user'),
     # path('login/', LoginView.as_view(), name='login'),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('registration.backends.default.urls')),
     path('signup/', SignUp.as_view(), name='signup'),
     path('markdownx/', include('markdownx.urls')),
     # re_path(r'^robots\.txt$', include('hide_herokuapp.urls')),

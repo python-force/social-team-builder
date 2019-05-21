@@ -124,7 +124,7 @@
                                             {% if user.is_authenticated %}
                                             <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
                                                 <button onclick="window.location.href = '{% url "profile" user.users.id %}';" type="button" tabindex="0" class="dropdown-item">Profile</button>
-                                                <button onclick="window.location.href = '{% url "logout" %}';" type="button" tabindex="0" class="dropdown-item">Logout</button>
+
                                             </div>
                                             {% endif %}
                                         </div>
@@ -144,8 +144,7 @@
                                         </button>
                                     </div>
                                     {% else %}
-                                    <a href="{% url 'signup' %}">Sign Up</a></li>
-                                    <a href="{% url 'login' %}">Sign In</a></li>
+
                                     {% endif %}
                                 </div>
                             </div>
