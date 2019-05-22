@@ -235,20 +235,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# MANAGER CONFIGURATION
-# ------------------------------------------------------------------------------
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = (
-    ('RV', 'studio@pythonforce.com'),
-)
-MANAGERS = (
-    ('RV', 'studio@pythonforce.com'),
-)
-
-# EMAIL CONFIGURATION
-# ------------------------------------------------------------------------------
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
-
 # LOGGING CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#logging
