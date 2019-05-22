@@ -79,3 +79,5 @@ INSTALLED_APPS = ['collectfast',] + INSTALLED_APPS
 # MINIFY HTML
 # ------------------------
 # HTML_MINIFY = True
+
+SENDGRID_SANDBOX_MODE_IN_DEBUG = False

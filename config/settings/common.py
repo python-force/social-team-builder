@@ -111,7 +111,7 @@ TEMPLATES = [
         # See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-TEMPLATES-BACKEND
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-dirs
-        'DIRS': [],
+        'DIRS': [APPS_DIR('core/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-debug
