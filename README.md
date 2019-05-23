@@ -4,7 +4,7 @@
 
 ## Installation
 
-1. python3 -m venv venv / or create your own Virtual Environment
+1. python3 -m venv venv / virtualenvwrapper / or create your own Virtual Environment
 2. activate the venv
 3. pip install -r requirements.txt
 4. python manage.py migrate
