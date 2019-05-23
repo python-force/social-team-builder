@@ -1,16 +1,12 @@
-from django.urls import reverse
-from django.test import Client
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 from collections import OrderedDict
 from django.contrib.messages import get_messages
 
-from stb.core.models import Profile, Skill, Project, Position, Position_Application
+from stb.core.models import Profile, Skill, Project, \
+    Position, Position_Application
 
-# TO DO
-# Cannot change stuff when not logged in AnonymousUSER
-# Create automatic project URL
 
 class EntireAppTest(TestCase):
 
@@ -36,16 +32,26 @@ class EntireAppTest(TestCase):
             password='terminator'
         )
 
+        cls.skill1 = Skill.objects.create(title='python')
+        cls.skill2 = Skill.objects.create(title='iOS')
+        cls.skill3 = Skill.objects.create(title='rails')
+        cls.skill4 = Skill.objects.create(title='android')
+
         # Profile, Skill & Project I
         cls.profile = Profile.objects.get(user=cls.user)
         cls.profile.full_name = 'John Connor'
         cls.profile.save()
 
+        cls.skill3.profile.add(cls.profile.id)
+        cls.skill3.save()
+
+        """
         skill = Skill()
         skill.save()
         skill.profile.add(cls.profile.id)
         skill.title = 'rails'
         skill.save()
+        """
 
         cls.project = Project.objects.create(
             profile=cls.profile,
@@ -53,23 +59,28 @@ class EntireAppTest(TestCase):
         )
         cls.position_user1 = Position.objects.create(
             project=cls.project,
-            title='Python Developer',
+            title=cls.skill1,
             description='Python Development is...',
         )
         cls.position2_user1 = Position.objects.create(
             project=cls.project,
-            title='iOS Developer',
+            title=cls.skill2,
             description='iOS Development is...',
         )
 
         # Profile, Skill & Project II
         cls.profile2 = Profile.objects.get(user=cls.user2)
 
+        cls.skill1.profile.add(cls.profile2.id)
+        cls.skill1.save()
+
+        """
         skill = Skill()
         skill.save()
         skill.profile.add(cls.profile2.id)
         skill.title = 'python'
         skill.save()
+        """
 
         cls.project2 = Project.objects.create(
             profile=cls.profile2,
@@ -77,22 +88,27 @@ class EntireAppTest(TestCase):
         )
         cls.position_user2 = Position.objects.create(
             project=cls.project2,
-            title='Rails Developer',
+            title=cls.skill3,
             description='Rails Development is...',
         )
         cls.position2_user2 = Position.objects.create(
             project=cls.project2,
-            title='Android Developer',
+            title=cls.skill4,
             description='Android Development is...',
         )
 
         cls.profile3 = Profile.objects.get(user=cls.user3)
 
+        cls.skill2.profile.add(cls.profile3.id)
+        cls.skill2.save()
+
+        """
         skill = Skill()
         skill.save()
         skill.profile.add(cls.profile3.id)
         skill.title = 'iOS'
         skill.save()
+        """
 
         cls.project3 = Project.objects.create(
             profile=cls.profile3,
@@ -100,15 +116,14 @@ class EntireAppTest(TestCase):
         )
         cls.position_user3 = Position.objects.create(
             project=cls.project3,
-            title='Rails Developer',
+            title=cls.skill3,
             description='Rails Development is...',
         )
         cls.position2_user3 = Position.objects.create(
             project=cls.project3,
-            title='Python Developer',
+            title=cls.skill1,
             description='Python Development is...',
         )
-
 
     def setUp(self):
         self.client.login(username='johnconnor', password='terminator')
@@ -125,12 +140,10 @@ class EntireAppTest(TestCase):
         url = '/project/2/apply/3/'
         self.client.get(url, data={})
 
-
     def test_create_account(self):
         self.user = User.objects.get(email='dude@nasa.gov')
         self.assertEqual(self.user.username, 'johnconnor')
         self.assertEqual(self.user.email, 'dude@nasa.gov')
-
 
     def test_create_profile(self):
         self.profile = Profile.objects.get(user=self.user)
@@ -146,7 +159,7 @@ class EntireAppTest(TestCase):
                 'title': 'BLACK HOLE DISCOVERY',
                 'position_formset-TOTAL_FORMS': 1,
                 'position_formset-INITIAL_FORMS': 0,
-                'position_formset-0-title': 'Rails Developer',
+                'position_formset-0-title': 3,
                 'position_formset-0-description': 'description',
             },
         )
@@ -154,7 +167,7 @@ class EntireAppTest(TestCase):
         position = Position.objects.filter(project=project)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(project.title, 'BLACK HOLE DISCOVERY')
-        self.assertEqual(position[0].title, 'Rails Developer')
+        self.assertEqual(position[0].title.title_position, 'Rails Developer')
 
     """
     def test_edit_project(self):
@@ -272,7 +285,6 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.context[-1]['project'].title, 'NASA JPL')
         self.assertEqual(response.status_code, 200)
 
-
     def test_applications_empty(self):
         url = '/applications/'
         response = self.client.get(
@@ -282,9 +294,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.context[-1]['applicant_dict'], OrderedDict())
         self.assertEqual(response.status_code, 200)
 
-
     def test_apply_position_view(self):
-        
         # Applied for the Project
         url = '/project/2/apply/4/'
         response = self.client.get(
@@ -295,9 +305,8 @@ class EntireAppTest(TestCase):
         self.assertEqual(position.count(), 1)
         self.assertEqual(response.status_code, 302)
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[1]), 'You have now applied for Android Developer.')
-
-
+        self.assertEqual(str(messages[1]), 'You have now applied '
+                                           'for Android Developer.')
 
     def test_apply_for_same_position_view(self):
 
@@ -310,8 +319,8 @@ class EntireAppTest(TestCase):
         position = Position_Application.objects.filter(position_id=3)
         self.assertEqual(position.count(), 1)
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[1]), 'You have already applied for Rails Developer position')
-
+        self.assertEqual(str(messages[1]), 'You have already applied '
+                                           'for Rails Developer position')
 
     def test_apply_for_my_own_position_view(self):
 
@@ -323,8 +332,8 @@ class EntireAppTest(TestCase):
         position = Position_Application.objects.filter(position_id=3)
         self.assertEqual(position.count(), 1)
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[1]), 'You cannot apply for your own iOS Developer position')
-
+        self.assertEqual(str(messages[1]), 'You cannot apply for your own '
+                                           'Ios Developer position')
 
     def test_apply_was_hired_view(self):
 
@@ -338,7 +347,8 @@ class EntireAppTest(TestCase):
             data={},
         )
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[1]), 'You were hired already for the Rails Developer position')
+        self.assertEqual(str(messages[1]), 'You were hired already for '
+                                           'the Rails Developer position')
 
     def test_apply_was_rejected_view(self):
 
@@ -352,7 +362,8 @@ class EntireAppTest(TestCase):
             data={},
         )
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[1]), 'You were rejected already for the Rails Developer position')
+        self.assertEqual(str(messages[1]), 'You were rejected already '
+                                           'for the Rails Developer position')
 
     def test_cancel_apply_position_view(self):
 
@@ -389,7 +400,9 @@ class EntireAppTest(TestCase):
         self.assertEqual(positions.count(), 2)
         self.assertEqual(response.status_code, 302)
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[2]), 'You were already hired for the Android Developer position. Too late buddy!')
+        self.assertEqual(str(messages[2]), 'You were already hired for the '
+                                           'Android Developer position. '
+                                           'Too late buddy!')
 
     def test_cancel_apply_position_already_rejected_view(self):
 
@@ -409,7 +422,9 @@ class EntireAppTest(TestCase):
         self.assertEqual(positions.count(), 2)
         self.assertEqual(response.status_code, 302)
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[2]), 'You were already rejected for the Android Developer position. Too late buddy!')
+        self.assertEqual(str(messages[2]), 'You were already rejected for '
+                                           'the Android Developer position. '
+                                           'Too late buddy!')
 
     def test_cancel_apply_position_never_applied_view(self):
 
@@ -422,7 +437,9 @@ class EntireAppTest(TestCase):
         self.assertEqual(positions.count(), 1)
         self.assertEqual(response.status_code, 302)
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[1]), 'You have never applied for the Android Developer position. Maybe you should consider.')
+        self.assertEqual(str(messages[1]), 'You have never applied for the '
+                                           'Android Developer position. '
+                                           'Maybe you should consider.')
 
     def test_accept_profile_position(self):
         """
@@ -441,7 +458,8 @@ class EntireAppTest(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[1]), 'Applicant John Connor was accepted for the Rails Developer position')
+        self.assertEqual(str(messages[1]), 'Applicant John Connor was accepted '
+                                           'for the Rails Developer position')
 
     def test_accept_profile_position_already_hired_view(self):
         """
@@ -460,7 +478,8 @@ class EntireAppTest(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[2]), 'The Rails Developer position was already filled')
+        self.assertEqual(str(messages[2]), 'The Rails Developer '
+                                           'position was already filled')
 
     def test_accept_profile_with_no_position_applied(self):
         """
@@ -492,7 +511,7 @@ class EntireAppTest(TestCase):
             self.assertEqual(key, 9)
             self.assertEqual(value[0].username, 'johnconnor')
             self.assertEqual(value[1].title, 'SPACE X')
-            self.assertEqual(value[2].title, 'Rails Developer')
+            self.assertEqual(value[2].title.title_position, 'Rails Developer')
             self.assertEqual(value[3], 0)
         self.assertEqual(response.status_code, 200)
 
@@ -509,7 +528,7 @@ class EntireAppTest(TestCase):
             self.assertEqual(key, 8)
             self.assertEqual(value[0].username, 'johnconnor')
             self.assertEqual(value[1].title, 'SPACE X')
-            self.assertEqual(value[2].title, 'Rails Developer')
+            self.assertEqual(value[2].title.title_position, 'Rails Developer')
             self.assertEqual(value[3], 0)
         self.assertEqual(response.status_code, 200)
 
@@ -526,7 +545,7 @@ class EntireAppTest(TestCase):
             self.assertEqual(key, 7)
             self.assertEqual(value[0].username, 'johnconnor')
             self.assertEqual(value[1].title, 'SPACE X')
-            self.assertEqual(value[2].title, 'Rails Developer')
+            self.assertEqual(value[2].title.title_position, 'Rails Developer')
             self.assertEqual(value[3], 0)
         self.assertEqual(response.status_code, 200)
 
@@ -555,6 +574,6 @@ class EntireAppTest(TestCase):
             self.assertEqual(key, 5)
             self.assertEqual(value[0].username, 'johnconnor')
             self.assertEqual(value[1].title, 'SPACE X')
-            self.assertEqual(value[2].title, 'Rails Developer')
+            self.assertEqual(value[2].title.title_position, 'Rails Developer')
             self.assertEqual(value[3], 0)
         self.assertEqual(response.status_code, 200)

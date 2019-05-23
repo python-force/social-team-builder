@@ -8,11 +8,13 @@ from django.contrib.auth.models import User
 def update_user_profile(sender, instance, *args, **kwargs):
     instance.is_staff = True
 
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         profile = Profile.objects.create(user=instance)
         profile.save()
+
 
 """
 @receiver(post_save, sender=User)

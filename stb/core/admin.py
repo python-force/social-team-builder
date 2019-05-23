@@ -1,6 +1,6 @@
 from django.contrib import admin
-from stb.core.models import Profile
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+# from stb.core.models import Profile
+# from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 """
 Appends Profile to User in Django Admin

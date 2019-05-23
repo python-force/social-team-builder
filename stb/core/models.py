@@ -4,14 +4,15 @@ from django.urls import reverse
 from django.utils import timezone
 from markdownx.models import MarkdownxField
 
+
 class Profile(models.Model):
     pub_date = models.DateTimeField(default=timezone.now)
-    user = models.OneToOneField(User, related_name='users', on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='users',
+                                on_delete=models.CASCADE)
     full_name = models.CharField(max_length=50, blank=True)
     description = MarkdownxField(blank=True)
     avatar = models.ImageField(blank=True)
     other_skills = models.CharField(max_length=255, blank=True)
-
 
     def __str__(self):
         return self.user.username
@@ -21,7 +22,8 @@ class Profile(models.Model):
 
 
 class Skill(models.Model):
-    profile = models.ManyToManyField(Profile, related_name='skills', blank=True)
+    profile = models.ManyToManyField(Profile, related_name='skills',
+                                     blank=True)
     title = models.CharField(max_length=100, blank=True)
     title_position = models.CharField(max_length=100, blank=True)
 
@@ -34,7 +36,8 @@ class Skill(models.Model):
 
 
 class Project(models.Model):
-    profile = models.ForeignKey(Profile, related_name='projects', on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, related_name='projects',
+                                on_delete=models.CASCADE)
     title = models.CharField(max_length=255, blank=True)
     url = models.URLField(blank=True)
     timeline = models.CharField(max_length=255, blank=True)
@@ -49,8 +52,10 @@ class Project(models.Model):
 
 
 class Position(models.Model):
-    project = models.ForeignKey(Project, related_name='positions', on_delete=models.CASCADE)
-    title = models.ForeignKey(Skill, related_name='skills', on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, related_name='positions',
+                                on_delete=models.CASCADE)
+    title = models.ForeignKey(Skill, related_name='skills',
+                              on_delete=models.CASCADE)
     description = MarkdownxField(blank=True)
     availability = models.CharField(max_length=255, blank=True)
 

@@ -1,19 +1,17 @@
-from django.views.generic import TemplateView, CreateView, DetailView, UpdateView, RedirectView
+from django.views.generic import TemplateView, CreateView, RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout
 from django.urls import reverse_lazy, reverse
-from django.contrib.auth.models import User
 from stb.core.models import Profile, Skill, Project, Position, Position_Application
 from django.http import Http404
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSetFactory
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from django.contrib import messages
 import collections
 from django.db.models import Q
-from django.http import HttpResponseRedirect
-from django.forms.formsets import all_valid
 from stb.core.forms import UserCreateForm, UserLoginForm, ProfileForm, SkillForm, ProjectForm, PositionForm
+
 
 class SignUp(CreateView):
     form_class = UserCreateForm
@@ -37,6 +35,7 @@ class LogoutView(RedirectView):
 
 class Test(TemplateView):
     template_name = "3.html"
+
 
 class Homepage(LoginRequiredMixin, TemplateView):
     template_name = "index.html"
@@ -70,7 +69,8 @@ class Applications(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         profile = Profile.objects.get(user=self.request.user)
-        applicants = Position_Application.objects.all().filter(profile=profile).prefetch_related('user', 'position')
+        applicants = Position_Application.objects.all().filter(
+            profile=profile).prefetch_related('user', 'position')
         applicant_dict = {}
         projects = []
         positions = []
@@ -96,11 +96,17 @@ class Applications(TemplateView):
                 applicant_dict[applicant.id] = project_list
                 status = self.kwargs.get('status')
                 if status == 'accepted':
-                    applicant_dict = {k: v for (k, v) in applicant_dict.items() if v[-1] == 1}
+                    applicant_dict = {k: v for (k, v)
+                                      in applicant_dict.items()
+                                      if v[-1] == 1}
                 elif status == 'rejected':
-                    applicant_dict = {k: v for (k, v) in applicant_dict.items() if v[-1] == 2}
+                    applicant_dict = {k: v for (k, v)
+                                      in applicant_dict.items()
+                                      if v[-1] == 2}
                 elif status == 'new-applications':
-                    applicant_dict = {k: v for (k, v) in applicant_dict.items() if v[-1] == 0}
+                    applicant_dict = {k: v for (k, v)
+                                      in applicant_dict.items()
+                                      if v[-1] == 0}
                 else:
                     raise Http404
         else:
@@ -130,7 +136,6 @@ class Applications(TemplateView):
                     positions.append(applicant.position)
         applicant_dict = collections.OrderedDict(sorted(applicant_dict.items()))
         context['applicant_dict'] = applicant_dict
-
 
         # Removes duplicates objects based on title
         # Cannot use .distinct() - it is not a QS
@@ -206,9 +211,11 @@ class ProfileView(TemplateView):
         context['profile'] = get_object_or_404(Profile, id=self.kwargs.get('pk'))
         context['skills'] = context['profile'].skills.all()
         context['projects'] = context['profile'].projects.all()
-        context['approved_projects'] = Position_Application.objects.filter(user_id=context['profile'].user.id, status=1)
+        context['approved_projects'] = Position_Application.objects.filter(
+            user_id=context['profile'].user.id, status=1)
         context['jobs_can_apply_to'] = []
-        not_my_projects = Project.objects.exclude(profile=context['profile']).prefetch_related()
+        not_my_projects = Project.objects.exclude(
+            profile=context['profile']).prefetch_related()
         for project in not_my_projects:
             for position in project.positions.all():
                 for skill in context['skills']:
@@ -224,7 +231,9 @@ class ProfileUpdateView(UpdateWithInlinesView):
     template_name = 'profile_edit.html'
 
     def get_queryset(self):
-        return get_object_or_404(Profile, user=self.request.user, id=self.kwargs.get('pk'))
+        return get_object_or_404(Profile,
+                                 user=self.request.user,
+                                 id=self.kwargs.get('pk'))
 
     def get_object(self, queryset=None):
         return self.get_queryset()
@@ -233,10 +242,12 @@ class ProfileUpdateView(UpdateWithInlinesView):
 class PositionInline(InlineFormSetFactory):
     model = Position
     form_class = PositionForm
-    initial = [{'title': 'Enter Position', 'availability': 'Availability for Applicant'}]
-    factory_kwargs = {'extra': 0, 'max_num': None,
+    initial = [{'title': 'Enter Position',
+                'availability': 'Availability for Applicant'}]
+    factory_kwargs = {'extra': 1, 'max_num': None,
                       'can_order': False, 'can_delete': True}
     prefix = 'position_formset'
+
 
 class CreateProjectView(CreateWithInlinesView):
     model = Project
@@ -262,8 +273,10 @@ class ProjectUpdateView(UpdateWithInlinesView):
     template_name = 'project_edit.html'
 
     def get_object(self, queryset=None):
-        project = get_object_or_404(Project, id=self.kwargs.get('pk'), profile=self.request.user.users.id)
+        project = get_object_or_404(Project, id=self.kwargs.get('pk'),
+                                    profile=self.request.user.users.id)
         return project
+
 
 class ProjectDeleteView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -303,7 +316,8 @@ class ProjectNeedsView(TemplateView):
         context = super().get_context_data(**kwargs)
         position = Position.objects.get(id=self.kwargs.get('pk'))
         context["position"] = position
-        context["projects"] = Project.objects.all().filter(positions__title=position.title)
+        context["projects"] = Project.objects.all().filter(
+            positions__title=position.title)
         context['positions'] = Position.objects.order_by('title').distinct('title')
         return context
 
@@ -340,7 +354,6 @@ class ProjectView(TemplateView):
                     position_info.append(found.status)
                     applied[position.id] = position_info
 
-
             """
             try:
                 found = Position_Application.objects.get(position=position)
@@ -354,6 +367,7 @@ class ProjectView(TemplateView):
 
         context['positions'] = applied
         return context
+
 
 class ApplyPositionView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -374,12 +388,16 @@ class ApplyPositionView(RedirectView):
                 if obj.status == 1:
                     messages.success(
                         self.request,
-                        "You were hired already for the {} position".format(position.title)
+                        "You were hired "
+                        "already for the "
+                        "{} position".format(position.title)
                     )
                 if obj.status == 2:
                     messages.success(
                         self.request,
-                        "You were rejected already for the {} position".format(position.title)
+                        "You were rejected "
+                        "already for the "
+                        "{} position".format(position.title)
                     )
                 else:
                     messages.warning(
@@ -399,7 +417,8 @@ class ApplyPositionView(RedirectView):
                 if created:
                     messages.success(
                         self.request,
-                        "You have now applied for {}.".format(position.title)
+                        "You have now applied for "
+                        "{}.".format(position.title)
                     )
         else:
             messages.warning(
@@ -418,7 +437,8 @@ class CancelApplyView(RedirectView):
                        kwargs={"pk": self.kwargs.get("pk")})
 
     def get(self, request, *args, **kwargs):
-        position_main = get_object_or_404(Position, id=self.kwargs.get("position"))
+        position_main = get_object_or_404(Position,
+                                          id=self.kwargs.get("position"))
         try:
             position = Position_Application.objects.get(
                 user=self.request.user,
@@ -465,12 +485,17 @@ class AcceptProjectProfileView(RedirectView):
 
     def get(self, request, *args, **kwargs):
 
-        my_profile = get_object_or_404(Profile, id=self.request.user.users.id)
-        profile = get_object_or_404(Profile, id=self.kwargs.get('pk'))
-        position = get_object_or_404(Position, id=self.kwargs.get('position'))
+        my_profile = get_object_or_404(Profile,
+                                       id=self.request.user.users.id)
+        profile = get_object_or_404(Profile,
+                                    id=self.kwargs.get('pk'))
+        position = get_object_or_404(Position,
+                                     id=self.kwargs.get('position'))
 
         if profile != my_profile:
-            applicant = get_object_or_404(Position_Application, position_id=self.kwargs.get('position'), user_id=profile.user.id)
+            applicant = get_object_or_404(Position_Application,
+                                          position_id=self.kwargs.get('position'),
+                                          user_id=profile.user.id)
             applicants = Position_Application.objects.filter(position_id=position.id)
             hired = applicants.filter(status=1)
 
@@ -492,7 +517,8 @@ class AcceptProjectProfileView(RedirectView):
                 applicant.save()
                 messages.success(
                     self.request,
-                    "Applicant {} was accepted for the {} position".format(profile.full_name, position.title)
+                    "Applicant {} was accepted for the {} position".format(
+                        profile.full_name, position.title)
                 )
 
             return super().get(request, *args, **kwargs)
