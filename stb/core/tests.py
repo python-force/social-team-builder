@@ -14,7 +14,10 @@ class EntireAppTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """Creating User"""
+        """Creating Users / 3
+        Creating initial Skills
+        Profiles / 3
+        """
         super().setUpClass()
         cls.user = User.objects.create_user(
             username='johnconnor',
@@ -126,6 +129,7 @@ class EntireAppTest(TestCase):
         )
 
     def setUp(self):
+        """Login User"""
         self.client.login(username='johnconnor', password='terminator')
 
         """
@@ -141,16 +145,19 @@ class EntireAppTest(TestCase):
         self.client.get(url, data={})
 
     def test_create_account(self):
+        """Test Account Creation"""
         self.user = User.objects.get(email='dude@nasa.gov')
         self.assertEqual(self.user.username, 'johnconnor')
         self.assertEqual(self.user.email, 'dude@nasa.gov')
 
     def test_create_profile(self):
+        """Test Profile Creation"""
         self.profile = Profile.objects.get(user=self.user)
         now = timezone.now()
         self.assertLess(self.profile.pub_date, now)
 
     def test_create_project(self):
+        """Test Project Creation"""
         url = '/project/new/'
         response = self.client.post(
             url,
@@ -198,6 +205,7 @@ class EntireAppTest(TestCase):
     """
 
     def test_homepage(self):
+        """Test Homepage"""
         url = '/'
         response = self.client.get(
             url,
@@ -208,6 +216,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_homepage_term(self):
+        """Test Search"""
         url = '/?q=NASA'
         response = self.client.get(
             url,
@@ -217,6 +226,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_homepage_no_term(self):
+        """Test Empty Search"""
         url = '/?q='
         response = self.client.get(
             url,
@@ -253,6 +263,7 @@ class EntireAppTest(TestCase):
     """
 
     def test_profile_view(self):
+        """Test Profile View"""
         url = '/profile/1/'
         response = self.client.get(
             url,
@@ -262,6 +273,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_profile_someone_else_update(self):
+        """Trying to Update Someone Else Profile"""
         url = '/profile/2/edit/'
         response = self.client.put(
             url,
@@ -277,6 +289,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_project_view(self):
+        """Test Project View"""
         url = '/project/1/'
         response = self.client.get(
             url,
@@ -286,6 +299,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_applications_empty(self):
+        """Check 0 Applications"""
         url = '/applications/'
         response = self.client.get(
             url,
@@ -295,6 +309,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_apply_position_view(self):
+        """Test Apply for Position"""
         # Applied for the Project
         url = '/project/2/apply/4/'
         response = self.client.get(
@@ -309,7 +324,7 @@ class EntireAppTest(TestCase):
                                            'for Android Developer.')
 
     def test_apply_for_same_position_view(self):
-
+        """Test Apply for the same Position"""
         # Applied for the same one
         url = '/project/2/apply/3/'
         response = self.client.get(
@@ -323,7 +338,7 @@ class EntireAppTest(TestCase):
                                            'for Rails Developer position')
 
     def test_apply_for_my_own_position_view(self):
-
+        """Test Apple for the same position"""
         url = '/project/1/apply/2/'
         response = self.client.get(
             url,
@@ -336,7 +351,7 @@ class EntireAppTest(TestCase):
                                            'Ios Developer position')
 
     def test_apply_was_hired_view(self):
-
+        """Test Applicant was already hired"""
         position = Position_Application.objects.get(position_id=3)
         position.status = 1
         position.save()
@@ -351,7 +366,7 @@ class EntireAppTest(TestCase):
                                            'the Rails Developer position')
 
     def test_apply_was_rejected_view(self):
-
+        """Test Applicant was rejected already"""
         position = Position_Application.objects.get(position_id=3)
         position.status = 2
         position.save()
@@ -366,7 +381,7 @@ class EntireAppTest(TestCase):
                                            'for the Rails Developer position')
 
     def test_cancel_apply_position_view(self):
-
+        """Test the Applicantion was canceled"""
         self.test_apply_position_view()
 
         # Cancel Apply for the project
@@ -383,7 +398,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(str(messages[2]), 'You have canceled the application.')
 
     def test_cancel_apply_position_already_hired_view(self):
-
+        """Test to cancel Application but was already hired"""
         self.test_apply_position_view()
 
         # Cancel Apply for the project already hired
@@ -405,7 +420,7 @@ class EntireAppTest(TestCase):
                                            'Too late buddy!')
 
     def test_cancel_apply_position_already_rejected_view(self):
-
+        """Test to cancel the Application was already rejected"""
         self.test_apply_position_view()
 
         # Cancel Apply for the project already rejected
@@ -427,7 +442,7 @@ class EntireAppTest(TestCase):
                                            'Too late buddy!')
 
     def test_cancel_apply_position_never_applied_view(self):
-
+        """Test to Cancel and was never applied"""
         url = '/project/2/cancel-apply/4/'
         response = self.client.get(
             url,
@@ -443,6 +458,7 @@ class EntireAppTest(TestCase):
 
     def test_accept_profile_position(self):
         """
+        Accept Profile position
         project=cls.project2,
         title='Rails Developer',
         description='Rails Development is...',
@@ -463,6 +479,7 @@ class EntireAppTest(TestCase):
 
     def test_accept_profile_position_already_hired_view(self):
         """
+        Accept accept already hired
         project=cls.project2,
         title='Rails Developer',
         description='Rails Development is...',
@@ -483,6 +500,7 @@ class EntireAppTest(TestCase):
 
     def test_accept_profile_with_no_position_applied(self):
         """
+        Accept profile no application
         project=cls.project2,
         title='Rails Developer',
         description='Rails Development is...',
@@ -499,7 +517,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_applications_list_view(self):
-
+        """Test Application Page View"""
         self.client.login(username='linda', password='linda-terminator')
 
         url = '/applications/'
@@ -516,7 +534,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_applications_list_status_view(self):
-
+        """Test New Applications"""
         self.client.login(username='linda', password='linda-terminator')
 
         url = '/applications/new-applications/'
@@ -533,7 +551,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_applications_list_project_view(self):
-
+        """Test Applications by Project"""
         self.client.login(username='linda', password='linda-terminator')
 
         url = '/applications/project/2/'
@@ -550,7 +568,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_applications_list_project_0_view(self):
-
+        """Test Applications by Project"""
         self.client.login(username='linda', password='linda-terminator')
 
         url = '/applications/project/3/'
@@ -562,7 +580,7 @@ class EntireAppTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_applications_list_position_view(self):
-
+        """Test Applications by Position"""
         self.client.login(username='linda', password='linda-terminator')
 
         url = '/applications/position/3/'

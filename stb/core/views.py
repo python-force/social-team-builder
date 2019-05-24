@@ -26,6 +26,7 @@ class LoginView(CreateView):
 
 
 class LogoutView(RedirectView):
+    """Logout"""
     url = reverse_lazy('login')
 
     def get(self, request, *args, **kwargs):
@@ -34,10 +35,12 @@ class LogoutView(RedirectView):
 
 
 class Test(TemplateView):
+    """Testing Templates"""
     template_name = "3.html"
 
 
 class Homepage(LoginRequiredMixin, TemplateView):
+    """Homepage / Search"""
     template_name = "index.html"
 
     model = Project
@@ -62,6 +65,11 @@ class Homepage(LoginRequiredMixin, TemplateView):
 
 
 class Applications(TemplateView):
+    """Application Logic
+    All Applications
+    Hire / Reject Developer
+    Sorting by categories
+    """
     template_name = "applications.html"
 
     model = Position_Application
@@ -180,11 +188,15 @@ class ApplicationsProjectView(TemplateView):
 
 
 class ProfileSkillInline(InlineFormSetFactory):
+    """Skill model for inline formset
+    Through Table
+    """
     model = Skill.profile.through
     exclude = ['id']
 
 
 class SkillInline(InlineFormSetFactory):
+    """Skill model for inline formset"""
     model = Skill
     form_class = SkillForm
     inlines = [ProfileSkillInline]
@@ -194,6 +206,7 @@ class SkillInline(InlineFormSetFactory):
 
 
 class ProjectInline(InlineFormSetFactory):
+    """Project model for inline formset"""
     model = Project
     form_class = ProjectForm
     factory_kwargs = {'extra': 0, 'max_num': None,
@@ -202,6 +215,7 @@ class ProjectInline(InlineFormSetFactory):
 
 
 class ProfileView(TemplateView):
+    """Profile Page"""
     template_name = "profile.html"
 
     model = Profile
@@ -225,6 +239,7 @@ class ProfileView(TemplateView):
 
 
 class ProfileUpdateView(UpdateWithInlinesView):
+    """Update Profile / Formsets"""
     model = Profile
     form_class = ProfileForm
     inlines = [ProfileSkillInline, ProjectInline]
@@ -240,6 +255,7 @@ class ProfileUpdateView(UpdateWithInlinesView):
 
 
 class PositionInline(InlineFormSetFactory):
+    """Position model for inline formset"""
     model = Position
     form_class = PositionForm
     initial = [{'title': 'Enter Position',
@@ -250,6 +266,7 @@ class PositionInline(InlineFormSetFactory):
 
 
 class CreateProjectView(CreateWithInlinesView):
+    """Create Project / Formsets"""
     model = Project
     form_class = ProjectForm
     inlines = [PositionInline]
@@ -267,6 +284,7 @@ class CreateProjectView(CreateWithInlinesView):
 
 
 class ProjectUpdateView(UpdateWithInlinesView):
+    """Update Project / Formsets"""
     model = Project
     form_class = ProjectForm
     inlines = [PositionInline]
@@ -279,6 +297,7 @@ class ProjectUpdateView(UpdateWithInlinesView):
 
 
 class ProjectDeleteView(RedirectView):
+    """Delete Project"""
     def get_redirect_url(self, *args, **kwargs):
         return reverse("index")
 
@@ -308,6 +327,7 @@ class ProjectDeleteView(RedirectView):
 
 
 class ProjectNeedsView(TemplateView):
+    """Homepage / Sorting by Project Needs"""
     template_name = "index.html"
 
     model = Project
@@ -323,6 +343,9 @@ class ProjectNeedsView(TemplateView):
 
 
 class ProjectView(TemplateView):
+    """Project Detail Page
+    Hired / Rejected
+    """
     template_name = "project.html"
 
     model = Project
@@ -370,6 +393,7 @@ class ProjectView(TemplateView):
 
 
 class ApplyPositionView(RedirectView):
+    """Apply for Position / Project"""
     def get_redirect_url(self, *args, **kwargs):
         return reverse("project",
                        kwargs={"pk": self.kwargs.get("pk")})
@@ -432,6 +456,7 @@ class ApplyPositionView(RedirectView):
 
 
 class CancelApplyView(RedirectView):
+    """Cancel Application for Position / Project"""
     def get_redirect_url(self, *args, **kwargs):
         return reverse("project",
                        kwargs={"pk": self.kwargs.get("pk")})
@@ -480,6 +505,7 @@ class CancelApplyView(RedirectView):
 
 
 class AcceptProjectProfileView(RedirectView):
+    """Accept Applicat for position"""
     def get_redirect_url(self, *args, **kwargs):
         return reverse("applications")
 
