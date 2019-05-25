@@ -11,6 +11,7 @@ from django.contrib import messages
 import collections
 from django.db.models import Q
 from stb.core.forms import UserCreateForm, UserLoginForm, ProfileForm, SkillForm, ProjectForm, PositionForm
+from django.core.mail import send_mail
 
 
 class SignUp(CreateView):
@@ -546,6 +547,23 @@ class AcceptProjectProfileView(RedirectView):
                     "Applicant {} was accepted for the {} position".format(
                         profile.full_name, position.title)
                 )
+                send_mail(
+                    'You were hired for {} position'.format(position.title),
+                    'Welcome to the team.',
+                    'studio@pythonforce.com',
+                    [profile.user.email],
+                    fail_silently=False,
+                )
+                applicants = Position_Application.objects.filter(position_id=position.id, status=2)
+                for reject in applicants:
+                    if reject.status == 2:
+                        send_mail(
+                            'You were rejected for {} position'.format(position.title),
+                            'Thank you for applying.',
+                            'studio@pythonforce.com',
+                            [reject.user.email],
+                            fail_silently=False,
+                        )
 
             return super().get(request, *args, **kwargs)
         else:
