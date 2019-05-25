@@ -7,6 +7,7 @@
 1. python3 -m venv venv / virtualenvwrapper / or create your own Virtual Environment
 2. activate the venv
 3. pip install -r requirements.txt
+4. Localhost / setup postgres DB (pc) / use Postgress App (mac)
 4. python manage.py migrate
 5. restore stb.dump to postgres DB
 

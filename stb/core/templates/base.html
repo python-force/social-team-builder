@@ -173,10 +173,11 @@
     <script type="text/javascript" src="{% static 'ui/assets/scripts/main.js' %}"></script></body>
 
     {% block js %}{% endblock %}
+    {% if messages %}
     <div id="toast-container" class="toast-bottom-center">
         <div class="toast toast-info" aria-live="polite" style="">
             <div class="toast-progress"></div>
-            <button type="button" class="toast-close-button" role="button">×</button>
+            <!-- <button type="button" class="toast-close-button" role="button">×</button> -->
             <div class="toast-title">Info</div>
             <div class="toast-message">
                 {% for message in messages %}
@@ -185,6 +186,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </body>
 </html>
 
