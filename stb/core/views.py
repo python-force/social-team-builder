@@ -65,7 +65,7 @@ class Homepage(LoginRequiredMixin, TemplateView):
         return context
 
 
-class Applications(TemplateView):
+class Applications(LoginRequiredMixin, TemplateView):
     """Application Logic
     All Applications
     Hire / Reject Developer
@@ -215,7 +215,7 @@ class ProjectInline(InlineFormSetFactory):
     prefix = 'project_formset'
 
 
-class ProfileView(TemplateView):
+class ProfileView(LoginRequiredMixin, TemplateView):
     """Profile Page"""
     template_name = "profile.html"
 
@@ -239,7 +239,7 @@ class ProfileView(TemplateView):
         return context
 
 
-class ProfileUpdateView(UpdateWithInlinesView):
+class ProfileUpdateView(LoginRequiredMixin, UpdateWithInlinesView):
     """Update Profile / Formsets"""
     model = Profile
     form_class = ProfileForm
@@ -284,7 +284,7 @@ class CreateProjectView(CreateWithInlinesView):
         return self.object.get_absolute_url()
 
 
-class ProjectUpdateView(UpdateWithInlinesView):
+class ProjectUpdateView(LoginRequiredMixin, UpdateWithInlinesView):
     """Update Project / Formsets"""
     model = Project
     form_class = ProjectForm
@@ -297,7 +297,7 @@ class ProjectUpdateView(UpdateWithInlinesView):
         return project
 
 
-class ProjectDeleteView(RedirectView):
+class ProjectDeleteView(LoginRequiredMixin, RedirectView):
     """Delete Project"""
     def get_redirect_url(self, *args, **kwargs):
         return reverse("index")
@@ -327,7 +327,7 @@ class ProjectDeleteView(RedirectView):
         return super().get(request, *args, **kwargs)
 
 
-class ProjectNeedsView(TemplateView):
+class ProjectNeedsView(LoginRequiredMixin, TemplateView):
     """Homepage / Sorting by Project Needs"""
     template_name = "index.html"
 
@@ -343,7 +343,7 @@ class ProjectNeedsView(TemplateView):
         return context
 
 
-class ProjectView(TemplateView):
+class ProjectView(LoginRequiredMixin, TemplateView):
     """Project Detail Page
     Hired / Rejected
     """
@@ -393,7 +393,7 @@ class ProjectView(TemplateView):
         return context
 
 
-class ApplyPositionView(RedirectView):
+class ApplyPositionView(LoginRequiredMixin, RedirectView):
     """Apply for Position / Project"""
     def get_redirect_url(self, *args, **kwargs):
         return reverse("project",
@@ -456,7 +456,7 @@ class ApplyPositionView(RedirectView):
         return super().get(request, *args, **kwargs)
 
 
-class CancelApplyView(RedirectView):
+class CancelApplyView(LoginRequiredMixin, RedirectView):
     """Cancel Application for Position / Project"""
     def get_redirect_url(self, *args, **kwargs):
         return reverse("project",
@@ -505,7 +505,7 @@ class CancelApplyView(RedirectView):
         return super().get(request, *args, **kwargs)
 
 
-class AcceptProjectProfileView(RedirectView):
+class AcceptProjectProfileView(LoginRequiredMixin, RedirectView):
     """Accept Applicat for position"""
     def get_redirect_url(self, *args, **kwargs):
         return reverse("applications")
