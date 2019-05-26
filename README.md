@@ -9,7 +9,7 @@
 3. pip install -r requirements.txt
 4. Localhost / setup postgres DB (pc) / use Postgress App (mac)
 4. python manage.py migrate
-5. restore stb.dump to postgres DB
+5. restore db-heroku2.dump to postgres DB
 
 **Important:**
 1. Make sure you clear all your cache
